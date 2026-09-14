@@ -12,8 +12,12 @@ const zoneTips: Record<string, ZoneTip> = Object.fromEntries(
   Object.entries(allUsZones).map(([k, z]) => [k, { short: z.short, zone: z.zone, color: zoneColor(k) }]),
 );
 
-// Small or crowded states get their label placed outside the shape instead.
-const LABEL_SKIP = new Set(['Rhode Island', 'Delaware', 'District of Columbia', 'Connecticut', 'New Jersey']);
+// The northeast is far too crowded for centroid labels, so these nine run out
+// to a column on the right on a leader line — same treatment as the printables.
+const LEADER: Record<string, number> = {
+  VT: 96, NH: 118, MA: 140, RI: 162, CT: 184, NJ: 208, DE: 230, MD: 252, DC: 274,
+};
+const LEADER_X = 944;
 
 /**
  * US time zone map, Albers USA projection with Alaska and Hawaii as insets.
@@ -30,13 +34,6 @@ export function UsMap({ initialNow }: { initialNow: number }) {
         role="img"
         aria-label="Map of United States time zones by state"
       >
-        <defs>
-          <pattern id="split-hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-            <rect width="7" height="7" fill="rgb(var(--canvas))" opacity="0.001" />
-            <line x1="0" y1="0" x2="0" y2="7" stroke="rgb(var(--canvas))" strokeWidth="2.6" opacity="0.5" />
-          </pattern>
-        </defs>
-
         <g>
           {usShapes.map((s) => (
             <path
@@ -53,18 +50,11 @@ export function UsMap({ initialNow }: { initialNow: number }) {
           ))}
         </g>
 
-        {/* Hatch overlay marking the states that straddle a zone boundary. */}
-        <g className="pointer-events-none">
-          {usShapes.filter((s) => s.split).map((s) => (
-            <path key={`h-${s.fips}`} d={s.d} fill="url(#split-hatch)" stroke="none" />
-          ))}
-        </g>
-
         {/* Both label sets ship in the HTML; the toolbar toggles which group shows,
             so switching modes costs no round trip and no extra JS payload. */}
         <g className="pointer-events-none" data-labels="abbr">
           {usShapes.map((s) =>
-            s.cx !== undefined && s.usps && !LABEL_SKIP.has(s.name) ? (
+            s.cx !== undefined && s.usps && LEADER[s.usps] === undefined ? (
               <text
                 key={`a-${s.fips}`}
                 x={s.cx}
@@ -83,7 +73,7 @@ export function UsMap({ initialNow }: { initialNow: number }) {
         </g>
         <g className="pointer-events-none" data-labels="name" style={{ display: 'none' }}>
           {usShapes.map((s) =>
-            s.cx !== undefined && s.usps && !LABEL_SKIP.has(s.name) ? (
+            s.cx !== undefined && s.usps && LEADER[s.usps] === undefined ? (
               <text
                 key={`n-${s.fips}`}
                 x={s.cx}
@@ -97,6 +87,33 @@ export function UsMap({ initialNow }: { initialNow: number }) {
               >
                 {s.name}
               </text>
+            ) : null,
+          )}
+        </g>
+        {/* Leader labels serve both modes: the full names would not fit here. */}
+        <g className="pointer-events-none" data-labels="leader">
+          {usShapes.map((s) =>
+            s.cx !== undefined && s.usps && LEADER[s.usps] !== undefined ? (
+              <g key={`ld-${s.fips}`}>
+                <line
+                  x1={s.cx}
+                  y1={s.cy}
+                  x2={LEADER_X - 5}
+                  y2={LEADER[s.usps] - 4}
+                  stroke="rgb(var(--muted))"
+                  strokeWidth="0.8"
+                />
+                <text
+                  x={LEADER_X}
+                  y={LEADER[s.usps]}
+                  fontSize="12"
+                  fontWeight="700"
+                  fill="rgb(var(--ink))"
+                  textAnchor="start"
+                >
+                  {s.usps}
+                </text>
+              </g>
             ) : null,
           )}
         </g>

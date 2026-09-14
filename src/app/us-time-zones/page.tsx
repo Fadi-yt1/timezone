@@ -72,22 +72,12 @@ export default function UsTimeZonesPage() {
                   {z.name}
                 </span>
               ))}
-              <span className="flex items-center gap-1.5 text-xs text-muted">
-                <span
-                  className="h-3 w-4 rounded-sm border border-line"
-                  style={{
-                    backgroundImage:
-                      'repeating-linear-gradient(45deg, rgb(var(--muted)) 0 2px, transparent 2px 5px)',
-                  }}
-                />
-                Split across two zones
-              </span>
+
             </div>
           </div>
           <p className="mt-3 text-xs text-faint">
-            States are filled by the zone that covers most of them. Thirteen states are split
-            across a boundary — those are hatched, and listed in full further down. Hover any state
-            for its current local time.
+            States are filled by the zone that covers most of them. Thirteen states are split across a
+            boundary and are listed in full further down. Hover any state for its current local time.
           </p>
         </section>
 
