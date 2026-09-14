@@ -17,18 +17,19 @@ const zoneTips: Record<string, ZoneTip> = Object.fromEntries(
 const LEADER: Record<string, number> = {
   VT: 96, NH: 118, MA: 140, RI: 162, CT: 184, NJ: 208, DE: 230, MD: 252, DC: 274,
 };
-const LEADER_X = 944;
+const LEADER_X = 990;
+/** Extra canvas to the right of the map for the leader-label column. */
+const GUTTER = 165;
 
 /**
  * US time zone map, Albers USA projection with Alaska and Hawaii as insets.
- * States are filled by the zone covering most of them; split states are hatched
- * so the map never implies a clean boundary where there isn't one.
+ * States are filled by the zone covering most of them.
  */
 export function UsMap({ initialNow }: { initialNow: number }) {
   return (
     <UsMapLayer states={meta} zoneTips={zoneTips} initialNow={initialNow}>
       <svg
-        viewBox={`0 0 ${usWidth} ${usHeight}`}
+        viewBox={`0 0 ${usWidth + GUTTER} ${usHeight}`}
         preserveAspectRatio="xMidYMid meet"
         className="h-full w-full"
         role="img"
@@ -51,10 +52,13 @@ export function UsMap({ initialNow }: { initialNow: number }) {
         </g>
 
         {/* Both label sets ship in the HTML; the toolbar toggles which group shows,
-            so switching modes costs no round trip and no extra JS payload. */}
-        <g className="pointer-events-none" data-labels="abbr">
-          {usShapes.map((s) =>
-            s.cx !== undefined && s.usps && LEADER[s.usps] === undefined ? (
+            so switching modes costs no round trip and no extra JS payload.
+            Text is bound to --ink so it stays legible in either theme. */}
+        <g className="pointer-events-none" data-labels="abbr" fill="rgb(var(--ink))">
+          {usShapes.map((s) => {
+            if (s.cx === undefined || !s.usps) return null;
+            const ly = LEADER[s.usps];
+            return ly === undefined ? (
               <text
                 key={`a-${s.fips}`}
                 x={s.cx}
@@ -63,17 +67,27 @@ export function UsMap({ initialNow }: { initialNow: number }) {
                 dominantBaseline="middle"
                 fontSize="13"
                 fontWeight="700"
-                fill="#0b1220"
-                opacity="0.72"
               >
                 {s.usps}
               </text>
-            ) : null,
-          )}
+            ) : (
+              <text key={`al-${s.fips}`} x={LEADER_X} y={ly} fontSize="12" fontWeight="700" textAnchor="start">
+                {s.usps}
+              </text>
+            );
+          })}
         </g>
-        <g className="pointer-events-none" data-labels="name" style={{ display: 'none' }}>
-          {usShapes.map((s) =>
-            s.cx !== undefined && s.usps && LEADER[s.usps] === undefined ? (
+
+        <g
+          className="pointer-events-none"
+          data-labels="name"
+          fill="rgb(var(--ink))"
+          style={{ display: 'none' }}
+        >
+          {usShapes.map((s) => {
+            if (s.cx === undefined || !s.usps) return null;
+            const ly = LEADER[s.usps];
+            return ly === undefined ? (
               <text
                 key={`n-${s.fips}`}
                 x={s.cx}
@@ -82,38 +96,30 @@ export function UsMap({ initialNow }: { initialNow: number }) {
                 dominantBaseline="middle"
                 fontSize="9.5"
                 fontWeight="700"
-                fill="#0b1220"
-                opacity="0.78"
               >
                 {s.name}
               </text>
-            ) : null,
-          )}
+            ) : (
+              <text key={`nl-${s.fips}`} x={LEADER_X} y={ly} fontSize="10.5" fontWeight="700" textAnchor="start">
+                {s.name}
+              </text>
+            );
+          })}
         </g>
-        {/* Leader labels serve both modes: the full names would not fit here. */}
-        <g className="pointer-events-none" data-labels="leader">
+
+        {/* The leader lines are shared by both naming modes. */}
+        <g className="pointer-events-none" data-labels="leaderlines">
           {usShapes.map((s) =>
             s.cx !== undefined && s.usps && LEADER[s.usps] !== undefined ? (
-              <g key={`ld-${s.fips}`}>
-                <line
-                  x1={s.cx}
-                  y1={s.cy}
-                  x2={LEADER_X - 5}
-                  y2={LEADER[s.usps] - 4}
-                  stroke="rgb(var(--muted))"
-                  strokeWidth="0.8"
-                />
-                <text
-                  x={LEADER_X}
-                  y={LEADER[s.usps]}
-                  fontSize="12"
-                  fontWeight="700"
-                  fill="rgb(var(--ink))"
-                  textAnchor="start"
-                >
-                  {s.usps}
-                </text>
-              </g>
+              <line
+                key={`ll-${s.fips}`}
+                x1={s.cx}
+                y1={s.cy}
+                x2={LEADER_X - 6}
+                y2={LEADER[s.usps] - 4}
+                stroke="rgb(var(--muted))"
+                strokeWidth="0.8"
+              />
             ) : null,
           )}
         </g>

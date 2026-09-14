@@ -59,10 +59,10 @@ export function UsMapLayer({
       const g = host.querySelector<SVGGElement>(`g[data-labels="${mode}"]`);
       if (g) g.style.display = labelMode === mode ? '' : 'none';
     }
-    // The leader labels carry the nine states too small to label in place, so
-    // they belong to both naming modes and only disappear on "blank".
-    const leader = host.querySelector<SVGGElement>('g[data-labels="leader"]');
-    if (leader) leader.style.display = labelMode === 'blank' ? 'none' : '';
+    // The leader lines serve whichever naming mode is active, so they only
+    // disappear on "blank".
+    const lines = host.querySelector<SVGGElement>('g[data-labels="leaderlines"]');
+    if (lines) lines.style.display = labelMode === 'blank' ? 'none' : '';
   }, [labelMode]);
 
   // Outline the state the reader searched for.
