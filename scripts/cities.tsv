@@ -1,0 +1,239 @@
+San Francisco	US	America/Los_Angeles	37.7749	-122.4194	3300000
+San Diego	US	America/Los_Angeles	32.7157	-117.1611	3300000
+San Jose	US	America/Los_Angeles	37.3382	-121.8863	2000000
+Seattle	US	America/Los_Angeles	47.6062	-122.3321	4000000
+Portland	US	America/Los_Angeles	45.5152	-122.6784	2500000
+Sacramento	US	America/Los_Angeles	38.5816	-121.4944	2400000
+Las Vegas	US	America/Los_Angeles	36.1699	-115.1398	2300000
+Houston	US	America/Chicago	29.7604	-95.3698	7100000
+Dallas	US	America/Chicago	32.7767	-96.7970	7600000
+San Antonio	US	America/Chicago	29.4241	-98.4936	2600000
+Austin	US	America/Chicago	30.2672	-97.7431	2300000
+Minneapolis	US	America/Chicago	44.9778	-93.2650	3700000
+Kansas City	US	America/Chicago	39.0997	-94.5786	2200000
+New Orleans	US	America/Chicago	29.9511	-90.0715	1300000
+Milwaukee	US	America/Chicago	43.0389	-87.9065	1570000
+Nashville	US	America/Chicago	36.1627	-86.7816	2000000
+Memphis	US	America/Chicago	35.1495	-90.0490	1340000
+Oklahoma City	US	America/Chicago	35.4676	-97.5164	1440000
+St. Louis	US	America/Chicago	38.6270	-90.1994	2800000
+Salt Lake City	US	America/Denver	40.7608	-111.8910	1260000
+Albuquerque	US	America/Denver	35.0844	-106.6504	920000
+Colorado Springs	US	America/Denver	38.8339	-104.8214	760000
+Boston	US	America/New_York	42.3601	-71.0589	4900000
+Philadelphia	US	America/New_York	39.9526	-75.1652	6200000
+Washington	US	America/New_York	38.9072	-77.0369	6300000
+Atlanta	US	America/New_York	33.7490	-84.3880	6100000
+Miami	US	America/New_York	25.7617	-80.1918	6200000
+Charlotte	US	America/New_York	35.2271	-80.8431	2700000
+Orlando	US	America/New_York	28.5383	-81.3792	2700000
+Tampa	US	America/New_York	27.9506	-82.4572	3200000
+Pittsburgh	US	America/New_York	40.4406	-79.9959	2400000
+Cleveland	US	America/New_York	41.4993	-81.6944	2080000
+Columbus	US	America/New_York	39.9612	-82.9988	2140000
+Baltimore	US	America/New_York	39.2904	-76.6122	2800000
+Raleigh	US	America/New_York	35.7796	-78.6382	1500000
+Jacksonville	US	America/New_York	30.3322	-81.6557	1600000
+Cincinnati	US	America/New_York	39.1031	-84.5120	2260000
+Buffalo	US	America/New_York	42.8864	-78.8784	1160000
+Richmond	US	America/New_York	37.5407	-77.4360	1300000
+Tucson	US	America/Phoenix	32.2226	-110.9747	1050000
+Mesa	US	America/Phoenix	33.4152	-111.8315	500000
+Montreal	CA	America/Toronto	45.5019	-73.5674	4300000
+Ottawa	CA	America/Toronto	45.4215	-75.6972	1500000
+Quebec City	CA	America/Toronto	46.8139	-71.2080	840000
+Calgary	CA	America/Edmonton	51.0447	-114.0719	1600000
+Victoria	CA	America/Vancouver	48.4284	-123.3656	400000
+Guadalajara	MX	America/Mexico_City	20.6597	-103.3496	5300000
+Puebla	MX	America/Mexico_City	19.0414	-98.2063	3200000
+Leon	MX	America/Mexico_City	21.1220	-101.6827	1800000
+Merida	MX	America/Merida	20.9674	-89.5926	1200000
+Rio de Janeiro	BR	America/Sao_Paulo	-22.9068	-43.1729	13500000
+Brasilia	BR	America/Sao_Paulo	-15.7939	-47.8828	4800000
+Belo Horizonte	BR	America/Sao_Paulo	-19.9167	-43.9345	6000000
+Curitiba	BR	America/Sao_Paulo	-25.4284	-49.2733	3700000
+Porto Alegre	BR	America/Sao_Paulo	-30.0346	-51.2177	4300000
+Rosario	AR	America/Argentina/Buenos_Aires	-32.9442	-60.6505	1400000
+Medellin	CO	America/Bogota	6.2442	-75.5812	4000000
+Cali	CO	America/Bogota	3.4516	-76.5320	2800000
+Barranquilla	CO	America/Bogota	10.9685	-74.7813	2200000
+Cartagena	CO	America/Bogota	10.3910	-75.4794	1100000
+Arequipa	PE	America/Lima	-16.4090	-71.5375	1100000
+Trujillo	PE	America/Lima	-8.1091	-79.0215	970000
+Valparaiso	CL	America/Santiago	-33.0472	-71.6127	1000000
+Concepcion	CL	America/Santiago	-36.8270	-73.0503	1000000
+Maracaibo	VE	America/Caracas	10.6666	-71.6124	2400000
+Quito	EC	America/Guayaquil	-0.1807	-78.4678	2800000
+Manchester	GB	Europe/London	53.4808	-2.2426	2800000
+Birmingham	GB	Europe/London	52.4862	-1.8904	2600000
+Glasgow	GB	Europe/London	55.8642	-4.2518	1700000
+Liverpool	GB	Europe/London	53.4084	-2.9916	900000
+Leeds	GB	Europe/London	53.8008	-1.5491	800000
+Edinburgh	GB	Europe/London	55.9533	-3.1883	540000
+Bristol	GB	Europe/London	51.4545	-2.5879	700000
+Cardiff	GB	Europe/London	51.4816	-3.1791	490000
+Belfast	GB	Europe/London	54.5973	-5.9301	640000
+Cork	IE	Europe/Dublin	51.8985	-8.4756	220000
+Lyon	FR	Europe/Paris	45.7640	4.8357	2300000
+Marseille	FR	Europe/Paris	43.2965	5.3698	1800000
+Toulouse	FR	Europe/Paris	43.6047	1.4442	1000000
+Nice	FR	Europe/Paris	43.7102	7.2620	950000
+Bordeaux	FR	Europe/Paris	44.8378	-0.5792	1000000
+Nantes	FR	Europe/Paris	47.2184	-1.5536	950000
+Lille	FR	Europe/Paris	50.6292	3.0573	1100000
+Strasbourg	FR	Europe/Paris	48.5734	7.7521	790000
+Munich	DE	Europe/Berlin	48.1351	11.5820	2600000
+Hamburg	DE	Europe/Berlin	53.5511	9.9937	3200000
+Frankfurt	DE	Europe/Berlin	50.1109	8.6821	2400000
+Cologne	DE	Europe/Berlin	50.9375	6.9603	3600000
+Stuttgart	DE	Europe/Berlin	48.7758	9.1829	2800000
+Dusseldorf	DE	Europe/Berlin	51.2277	6.7735	1500000
+Leipzig	DE	Europe/Berlin	51.3397	12.3731	600000
+Barcelona	ES	Europe/Madrid	41.3851	2.1734	5600000
+Valencia	ES	Europe/Madrid	39.4699	-0.3763	1600000
+Seville	ES	Europe/Madrid	37.3891	-5.9845	1500000
+Bilbao	ES	Europe/Madrid	43.2630	-2.9350	1000000
+Malaga	ES	Europe/Madrid	36.7213	-4.4214	980000
+Zaragoza	ES	Europe/Madrid	41.6488	-0.8891	750000
+Milan	IT	Europe/Rome	45.4642	9.1900	4300000
+Naples	IT	Europe/Rome	40.8518	14.2681	3100000
+Turin	IT	Europe/Rome	45.0703	7.6869	1800000
+Florence	IT	Europe/Rome	43.7696	11.2558	1000000
+Venice	IT	Europe/Rome	45.4408	12.3155	640000
+Bologna	IT	Europe/Rome	44.4949	11.3426	1000000
+Palermo	IT	Europe/Rome	38.1157	13.3615	1200000
+Porto	PT	Europe/Lisbon	41.1579	-8.6291	1700000
+Braga	PT	Europe/Lisbon	41.5454	-8.4265	190000
+Rotterdam	NL	Europe/Amsterdam	51.9244	4.4777	1200000
+The Hague	NL	Europe/Amsterdam	52.0705	4.3007	1100000
+Utrecht	NL	Europe/Amsterdam	52.0907	5.1214	660000
+Eindhoven	NL	Europe/Amsterdam	51.4416	5.4697	440000
+Antwerp	BE	Europe/Brussels	51.2194	4.4025	1200000
+Ghent	BE	Europe/Brussels	51.0543	3.7174	560000
+Geneva	CH	Europe/Zurich	46.2044	6.1432	620000
+Basel	CH	Europe/Zurich	47.5596	7.5886	550000
+Bern	CH	Europe/Zurich	46.9480	7.4474	430000
+Lausanne	CH	Europe/Zurich	46.5197	6.6323	420000
+Graz	AT	Europe/Vienna	47.0707	15.4395	330000
+Salzburg	AT	Europe/Vienna	47.8095	13.0550	160000
+Innsbruck	AT	Europe/Vienna	47.2692	11.4041	130000
+Gothenburg	SE	Europe/Stockholm	57.7089	11.9746	1050000
+Malmo	SE	Europe/Stockholm	55.6050	13.0038	740000
+Bergen	NO	Europe/Oslo	60.3913	5.3221	290000
+Trondheim	NO	Europe/Oslo	63.4305	10.3951	210000
+Aarhus	DK	Europe/Copenhagen	56.1629	10.2039	360000
+Tampere	FI	Europe/Helsinki	61.4978	23.7610	350000
+Espoo	FI	Europe/Helsinki	60.2055	24.6559	300000
+Krakow	PL	Europe/Warsaw	50.0647	19.9450	1100000
+Wroclaw	PL	Europe/Warsaw	51.1079	17.0385	870000
+Lodz	PL	Europe/Warsaw	51.7592	19.4560	680000
+Poznan	PL	Europe/Warsaw	52.4064	16.9252	1000000
+Gdansk	PL	Europe/Warsaw	54.3520	18.6466	1080000
+Brno	CZ	Europe/Prague	49.1951	16.6068	400000
+Thessaloniki	GR	Europe/Athens	40.6401	22.9444	1100000
+Ankara	TR	Europe/Istanbul	39.9334	32.8597	5700000
+Izmir	TR	Europe/Istanbul	38.4237	27.1428	4400000
+Bursa	TR	Europe/Istanbul	40.1885	29.0610	3100000
+Antalya	TR	Europe/Istanbul	36.8969	30.7133	2600000
+Adana	TR	Europe/Istanbul	37.0000	35.3213	2300000
+Saint Petersburg	RU	Europe/Moscow	59.9311	30.3609	5600000
+Nizhny Novgorod	RU	Europe/Moscow	56.2965	43.9361	1250000
+Kazan	RU	Europe/Moscow	55.7963	49.1088	1300000
+Rostov-on-Don	RU	Europe/Moscow	47.2357	39.7015	1140000
+Sochi	RU	Europe/Moscow	43.6028	39.7342	470000
+Kharkiv	UA	Europe/Kyiv	49.9935	36.2304	1400000
+Odesa	UA	Europe/Kyiv	46.4825	30.7233	1000000
+Lviv	UA	Europe/Kyiv	49.8397	24.0297	720000
+Dnipro	UA	Europe/Kyiv	48.4647	35.0462	980000
+Cluj-Napoca	RO	Europe/Bucharest	46.7712	23.6236	410000
+Timisoara	RO	Europe/Bucharest	45.7489	21.2087	320000
+Mumbai	IN	Asia/Kolkata	19.0760	72.8777	21300000
+Delhi	IN	Asia/Kolkata	28.6139	77.2090	32900000
+Bengaluru	IN	Asia/Kolkata	12.9716	77.5946	13600000
+Chennai	IN	Asia/Kolkata	13.0827	80.2707	11500000
+Hyderabad	IN	Asia/Kolkata	17.3850	78.4867	10500000
+Pune	IN	Asia/Kolkata	18.5204	73.8567	7200000
+Ahmedabad	IN	Asia/Kolkata	23.0225	72.5714	8400000
+Jaipur	IN	Asia/Kolkata	26.9124	75.7873	4100000
+Lucknow	IN	Asia/Kolkata	26.8467	80.9462	3800000
+Lahore	PK	Asia/Karachi	31.5204	74.3587	13500000
+Islamabad	PK	Asia/Karachi	33.6844	73.0479	1200000
+Faisalabad	PK	Asia/Karachi	31.4504	73.1350	3700000
+Rawalpindi	PK	Asia/Karachi	33.5651	73.0169	2300000
+Chittagong	BD	Asia/Dhaka	22.3569	91.7832	5200000
+Beijing	CN	Asia/Shanghai	39.9042	116.4074	21900000
+Guangzhou	CN	Asia/Shanghai	23.1291	113.2644	18700000
+Shenzhen	CN	Asia/Shanghai	22.5431	114.0579	17500000
+Chengdu	CN	Asia/Shanghai	30.5728	104.0668	16300000
+Tianjin	CN	Asia/Shanghai	39.3434	117.3616	13600000
+Wuhan	CN	Asia/Shanghai	30.5928	114.3055	12300000
+Chongqing	CN	Asia/Shanghai	29.5630	106.5516	16900000
+Xian	CN	Asia/Shanghai	34.3416	108.9398	13000000
+Hangzhou	CN	Asia/Shanghai	30.2741	120.1551	12200000
+Nanjing	CN	Asia/Shanghai	32.0603	118.7969	9300000
+Shenyang	CN	Asia/Shanghai	41.8057	123.4315	9100000
+Qingdao	CN	Asia/Shanghai	36.0671	120.3826	10100000
+Osaka	JP	Asia/Tokyo	34.6937	135.5023	19100000
+Yokohama	JP	Asia/Tokyo	35.4437	139.6380	3770000
+Nagoya	JP	Asia/Tokyo	35.1815	136.9066	9500000
+Sapporo	JP	Asia/Tokyo	43.0618	141.3545	2700000
+Fukuoka	JP	Asia/Tokyo	33.5904	130.4017	2500000
+Kyoto	JP	Asia/Tokyo	35.0116	135.7681	1460000
+Kobe	JP	Asia/Tokyo	34.6901	135.1955	1520000
+Busan	KR	Asia/Seoul	35.1796	129.0756	3400000
+Incheon	KR	Asia/Seoul	37.4563	126.7052	3000000
+Daegu	KR	Asia/Seoul	35.8714	128.6014	2400000
+Kaohsiung	TW	Asia/Taipei	22.6273	120.3014	2760000
+Taichung	TW	Asia/Taipei	24.1477	120.6736	2820000
+Surabaya	ID	Asia/Jakarta	-7.2575	112.7521	9900000
+Bandung	ID	Asia/Jakarta	-6.9175	107.6191	8700000
+Medan	ID	Asia/Jakarta	3.5952	98.6722	4700000
+Cebu City	PH	Asia/Manila	10.3157	123.8854	3000000
+Davao City	PH	Asia/Manila	7.1907	125.4553	1900000
+Hanoi	VN	Asia/Ho_Chi_Minh	21.0285	105.8542	8500000
+Da Nang	VN	Asia/Ho_Chi_Minh	16.0544	108.2022	1200000
+Chiang Mai	TH	Asia/Bangkok	18.7883	98.9853	1200000
+Johor Bahru	MY	Asia/Kuala_Lumpur	1.4927	103.7414	1000000
+George Town	MY	Asia/Kuala_Lumpur	5.4141	100.3288	800000
+Mandalay	MM	Asia/Yangon	21.9588	96.0891	1700000
+Mashhad	IR	Asia/Tehran	36.2605	59.6168	3400000
+Isfahan	IR	Asia/Tehran	32.6546	51.6680	2200000
+Tabriz	IR	Asia/Tehran	38.0962	46.2738	1700000
+Shiraz	IR	Asia/Tehran	29.5918	52.5837	1600000
+Basra	IQ	Asia/Baghdad	30.5085	47.7804	2900000
+Mosul	IQ	Asia/Baghdad	36.3350	43.1189	1700000
+Erbil	IQ	Asia/Baghdad	36.1911	44.0092	1100000
+Tel Aviv	IL	Asia/Jerusalem	32.0853	34.7818	4200000
+Haifa	IL	Asia/Jerusalem	32.7940	34.9896	1100000
+Jeddah	SA	Asia/Riyadh	21.4858	39.1925	4700000
+Mecca	SA	Asia/Riyadh	21.3891	39.8579	2100000
+Medina	SA	Asia/Riyadh	24.5247	39.5692	1500000
+Dammam	SA	Asia/Riyadh	26.4207	50.0888	1500000
+Abu Dhabi	AE	Asia/Dubai	24.4539	54.3773	1800000
+Sharjah	AE	Asia/Dubai	25.3463	55.4209	1800000
+Astana	KZ	Asia/Almaty	51.1694	71.4491	1350000
+Shymkent	KZ	Asia/Almaty	42.3417	69.5901	1100000
+Samarkand	UZ	Asia/Tashkent	39.6270	66.9750	550000
+Alexandria	EG	Africa/Cairo	31.2001	29.9187	5400000
+Giza	EG	Africa/Cairo	30.0131	31.2089	4400000
+Marrakesh	MA	Africa/Casablanca	31.6295	-7.9811	1000000
+Rabat	MA	Africa/Casablanca	34.0209	-6.8416	1900000
+Tangier	MA	Africa/Casablanca	35.7595	-5.8340	1200000
+Fez	MA	Africa/Casablanca	34.0181	-5.0078	1200000
+Oran	DZ	Africa/Algiers	35.6969	-0.6331	1500000
+Benghazi	LY	Africa/Tripoli	32.1167	20.0667	800000
+Kano	NG	Africa/Lagos	12.0022	8.5920	4100000
+Ibadan	NG	Africa/Lagos	7.3775	3.9470	3600000
+Abuja	NG	Africa/Lagos	9.0765	7.3986	3600000
+Port Harcourt	NG	Africa/Lagos	4.8156	7.0498	3200000
+Kumasi	GH	Africa/Accra	6.6885	-1.6244	3300000
+Yaounde	CM	Africa/Douala	3.8480	11.5021	4100000
+Cape Town	ZA	Africa/Johannesburg	-33.9249	18.4241	4800000
+Durban	ZA	Africa/Johannesburg	-29.8587	31.0218	3900000
+Pretoria	ZA	Africa/Johannesburg	-25.7479	28.2293	2600000
+Mombasa	KE	Africa/Nairobi	-4.0435	39.6682	1300000
+Gold Coast	AU	Australia/Brisbane	-28.0167	153.4000	700000
+Canberra	AU	Australia/Sydney	-35.2809	149.1300	460000
+Newcastle	AU	Australia/Sydney	-32.9283	151.7817	500000
+Wellington	NZ	Pacific/Auckland	-41.2866	174.7756	440000
+Christchurch	NZ	Pacific/Auckland	-43.5321	172.6362	400000

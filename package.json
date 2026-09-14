@@ -1,0 +1,33 @@
+{
+  "name": "meridian-world-time",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Meridian — interactive world time zone map, converter and meeting planner.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "data": "node scripts/build-dataset.mjs"
+  },
+  "dependencies": {
+    "d3-geo": "^3.1.1",
+    "next": "^15.5.25",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "topojson-client": "^3.1.0"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.13",
+    "@types/d3-geo": "^3.1.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/topojson-client": "^3.1.5",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.7.3",
+    "world-atlas": "^2.0.2"
+  }
+}

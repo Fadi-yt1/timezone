@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Meridian design tokens.
+ * Typography follows the Adobe type direction: a geometric-humanist sans with
+ * tight tracking for display, a body-safe humanist sans for UI, and a true
+ * monospace so clock digits never shift width as they tick.
+ */
+:root {
+  --canvas: 6 10 20;
+  --surface: 12 18 32;
+  --raised: 20 28 46;
+  --line: 33 44 68;
+  --ink: 233 239 250;
+  --muted: 150 164 190;
+  --faint: 104 119 146;
+  --accent: 245 173 66;
+  --accent-soft: 120 84 30;
+  --night: 30 41 82;
+  --day: 250 204 121;
+  /* The map's night-side wash, tuned per theme. */
+  --veil: 2 5 16;
+  --veil-opacity: 0.46;
+  --shadow: 0 0 0;
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --canvas: 248 250 253;
+  --surface: 255 255 255;
+  --raised: 241 245 251;
+  --line: 219 227 238;
+  --ink: 15 23 42;
+  --muted: 82 96 120;
+  --faint: 124 138 162;
+  --accent: 181 106 8;
+  --accent-soft: 253 235 205;
+  --night: 60 74 130;
+  --day: 234 165 56;
+  --veil: 28 40 78;
+  --veil-opacity: 0.2;
+  --shadow: 15 23 42;
+  color-scheme: light;
+}
+
+* {
+  border-color: rgb(var(--line));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--canvas));
+  color: rgb(var(--ink));
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Tabular figures everywhere: clock digits must not jitter as they tick. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'cv05' 1;
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-xl2 border border-line bg-surface;
+  }
+
+  .card-hover {
+    @apply transition-colors duration-150 hover:border-accent/45 hover:bg-raised;
+  }
+
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.13em] text-faint;
+  }
+
+  .clock {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .display {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    letter-spacing: -0.02em; /* the tracking the Adobe palette observed */
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line
+           bg-raised px-4 py-2.5 text-sm font-semibold text-ink transition-colors
+           hover:border-accent/50 hover:text-accent focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-accent/60 disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply border-transparent bg-accent text-canvas hover:bg-accent hover:text-canvas
+           hover:brightness-110;
+  }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink
+           placeholder:text-faint focus:border-accent/60 focus:outline-none
+           focus:ring-2 focus:ring-accent/25;
+  }
+
+  .link {
+    @apply text-accent underline-offset-4 hover:underline;
+  }
+
+  .prose-block :where(p) {
+    @apply mb-4 leading-relaxed text-muted;
+  }
+  .prose-block :where(h2) {
+    @apply display mb-3 mt-9 text-xl font-semibold text-ink;
+  }
+  .prose-block :where(h3) {
+    @apply mb-2 mt-6 font-semibold text-ink;
+  }
+  .prose-block :where(ul) {
+    @apply mb-4 list-disc space-y-1.5 pl-5 text-muted;
+  }
+}
+
+/* The map's night hemisphere reads as dusk, not a grey slab. */
+.night-veil {
+  fill: rgb(var(--veil));
+  opacity: var(--veil-opacity);
+}
+
+/* Thin, unobtrusive scrollbars inside scrolling panels. */
+.scroll-slim::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgb(var(--line));
+  border-radius: 8px;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
