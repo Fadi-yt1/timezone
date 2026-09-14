@@ -9,6 +9,7 @@ import {
 import { UsSettingsProvider } from '@/components/us/UsSettings';
 import { UsToolbar } from '@/components/us/UsToolbar';
 import { StateTimeGrid } from '@/components/us/StateTimeGrid';
+import { PrintableMaps } from '@/components/us/PrintableMaps';
 import { abbreviation, dstState, formatUtcLabel, nextTransition, offsetMinutes } from '@/lib/time';
 import { relativeFuture } from '@/lib/format';
 
@@ -258,6 +259,8 @@ export default function UsTimeZonesPage() {
             ))}
           </div>
         </section>
+
+        <PrintableMaps />
 
         {/* Outside the lower 48 */}
         <section className="mt-14">

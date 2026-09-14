@@ -26,8 +26,6 @@ const groups = [
     title: 'About',
     links: [
       { href: '/about', label: 'How it works' },
-      { href: '/api', label: 'Free JSON API' },
-      { href: '/sitemap.xml', label: 'Sitemap' },
     ],
   },
 ];
@@ -63,14 +61,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-line">
-        <div className="shell flex flex-col gap-2 py-5 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            Time zone data from the{' '}
-            <a href="https://www.iana.org/time-zones" className="link" rel="noreferrer noopener" target="_blank">
-              IANA time zone database
-            </a>
-            , which is in the public domain.
-          </p>
+        <div className="shell flex py-5 text-xs text-faint">
           <p>© {new Date().getUTCFullYear()} {site.name}</p>
         </div>
       </div>
