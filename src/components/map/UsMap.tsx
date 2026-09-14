@@ -25,7 +25,14 @@ const GUTTER = 165;
  * US time zone map, Albers USA projection with Alaska and Hawaii as insets.
  * States are filled by the zone covering most of them.
  */
-export function UsMap({ initialNow }: { initialNow: number }) {
+export function UsMap({
+  initialNow,
+  detail = 'full',
+}: {
+  initialNow: number;
+  /** 'lite' swaps in simplified geometry — a third of the bytes, for teasers. */
+  detail?: 'full' | 'lite';
+}) {
   return (
     <UsMapLayer states={meta} zoneTips={zoneTips} initialNow={initialNow}>
       <svg
@@ -39,7 +46,7 @@ export function UsMap({ initialNow }: { initialNow: number }) {
           {usShapes.map((s) => (
             <path
               key={s.fips}
-              d={s.d}
+              d={detail === 'lite' ? (s.dLite ?? s.d) : s.d}
               data-fips={s.fips}
               fill={zoneColor(s.mapZone)}
               stroke="rgb(var(--canvas))"

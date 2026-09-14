@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { feature } from 'topojson-client';
+import { presimplify, simplify, quantile } from 'topojson-simplify';
 import { geoAlbersUsa, geoPath } from 'd3-geo';
 
 const OUT = path.join(process.cwd(), 'src/data');
@@ -45,6 +46,13 @@ for (const line of fs.readFileSync(path.join(process.cwd(), 'scripts/us-zones.ts
 // --- project the states ---
 const topo = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'node_modules/us-atlas/states-10m.json'), 'utf8'));
 const states = feature(topo, topo.objects.states);
+
+// A coarser second geometry for the home page, where the map is a teaser shown
+// at roughly half size. Dropping the least significant points keeps the shapes
+// recognisable at a fraction of the path bytes.
+const pre = presimplify(topo);
+const liteTopo = simplify(pre, quantile(pre, 0.22));
+const liteStates = feature(liteTopo, liteTopo.objects.states);
 // Albers USA lifts Alaska and Hawaii into insets, which is what a US map wants.
 const projection = geoAlbersUsa().scale(1300).translate([W / 2, H / 2 - 20]);
 const toPath = geoPath(projection);
@@ -75,6 +83,17 @@ for (const f of states.features) {
     zones: entries.map((e) => e.zoneKey),
     split: entries.length > 1,
   });
+}
+
+// Coarse paths for the home-page teaser, keyed by FIPS.
+const lite = {};
+for (const f of liteStates.features) {
+  const raw = toPath(f);
+  if (!raw) continue;
+  lite[String(f.id)] = raw.replace(/-?\d+\.\d+/g, (n) => String(Math.round(Number(n) * 10) / 10));
+}
+for (const s of shapes) {
+  if (lite[s.fips]) s.dLite = lite[s.fips];
 }
 
 // Centroids for state labels on the map.
@@ -114,6 +133,9 @@ fs.writeFileSync(
   JSON.stringify({ width: W, height: H, zones: ZONES, outlying: OUTLYING, shapes, zoneStates, splitStates }),
 );
 const kb = (fs.statSync(path.join(OUT, 'us.json')).size / 1024).toFixed(1);
+const full = shapes.reduce((n, s) => n + s.d.length, 0);
+const liteBytes = shapes.reduce((n, s) => n + (s.dLite?.length ?? 0), 0);
 console.log(`us.json: ${shapes.length} state shapes, ${splitStates.length} split states, ${kb} KB`);
+console.log(`  detailed paths ${(full / 1024).toFixed(0)} KB -> lite paths ${(liteBytes / 1024).toFixed(0)} KB`);
 if (skipped.length) console.log('skipped:', skipped.join(', '));
 for (const [k, v] of Object.entries(zoneStates)) console.log(`  ${k.padEnd(9)} ${v.length} entries`);

@@ -13,6 +13,8 @@ export interface UsStateShape {
   name: string;
   usps: string | null;
   d: string;
+  /** Coarser path for the home-page teaser; ~27% of the detailed byte count. */
+  dLite?: string;
   mapZone: string;
   zones: string[];
   split: boolean;

@@ -1,16 +1,16 @@
 import Link from 'next/link';
+import { UsMap } from '@/components/map/UsMap';
 import { UsZoneClock } from '@/components/tools/UsZoneClock';
 import { UsSettingsProvider } from './UsSettings';
 import { continentalZones, zoneColor } from '@/lib/us';
 
 /**
- * Condensed US section for the home page: the four continental zone clocks and
- * a link through to the full page.
+ * Condensed US section for the home page: the four continental zone clocks over
+ * an interactive map, linking through to the full page.
  *
- * Deliberately no map here. The interactive US map is ~169 KB of path data and
- * the home page already carries the world map; rendering both pushed the page
- * from 158 KB to 297 KB gzipped. The printable maps section directly below
- * supplies the US visual, and the full map lives one click away.
+ * The map runs at 'lite' detail. The home page already carries the world map,
+ * and the detailed US geometry is 154 KB of path data on its own; the
+ * simplified variant is 42 KB and indistinguishable at this size.
  */
 export function UsZonesHome({ initialNow }: { initialNow: number }) {
   return (
@@ -42,6 +42,20 @@ export function UsZonesHome({ initialNow }: { initialNow: number }) {
           ))}
         </div>
 
+        <div className="card mt-5 overflow-hidden">
+          <div className="relative aspect-[16/10] w-full bg-canvas">
+            <UsMap initialNow={initialNow} detail="lite" />
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line px-4 py-3.5 sm:px-5">
+            <span className="label">Zones</span>
+            {continentalZones.map((z) => (
+              <span key={z.key} className="flex items-center gap-1.5 text-xs text-muted">
+                <span className="h-3 w-4 rounded-sm" style={{ background: zoneColor(z.key) }} />
+                {z.name}
+              </span>
+            ))}
+          </div>
+        </div>
       </UsSettingsProvider>
     </section>
   );
