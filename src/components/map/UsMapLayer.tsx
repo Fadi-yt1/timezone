@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNow } from '@/components/LiveClock';
 import { formatClock } from '@/lib/format';
+import { useUsSettings } from '@/components/us/UsSettings';
 
 
 export interface UsStateMeta {
@@ -45,9 +46,31 @@ export function UsMapLayer({
   children: React.ReactNode;
 }) {
   const now = useNow(initialNow, 30_000);
+  const { hour12, labelMode, focused } = useUsSettings();
   const [tip, setTip] = useState<Tip | null>(null);
   const hostRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+
+  // Toggle the server-rendered label groups rather than re-rendering the SVG.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    for (const mode of ['abbr', 'name'] as const) {
+      const g = host.querySelector<SVGGElement>(`g[data-labels="${mode}"]`);
+      if (g) g.style.display = labelMode === mode ? '' : 'none';
+    }
+  }, [labelMode]);
+
+  // Outline the state the reader searched for.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    for (const p of host.querySelectorAll<SVGPathElement>('path[data-fips]')) {
+      const on = focused !== null && p.getAttribute('data-fips') === focused;
+      p.setAttribute('stroke', on ? 'rgb(var(--ink))' : 'rgb(var(--canvas))');
+      p.setAttribute('stroke-width', on ? '2.5' : '1');
+    }
+  }, [focused]);
 
   const onMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,11 +94,11 @@ export function UsMapLayer({
         split: state.split,
         rows: state.zones.flatMap((k) => {
           const z = zoneTips[k];
-          return z ? [{ label: z.short, time: formatClock(z.zone, now), color: z.color }] : [];
+          return z ? [{ label: z.short, time: formatClock(z.zone, now, { hour12 }), color: z.color }] : [];
         }),
       });
     },
-    [states, zoneTips, now],
+    [states, zoneTips, now, hour12],
   );
 
   const onClick = useCallback(

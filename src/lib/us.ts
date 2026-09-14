@@ -1,4 +1,5 @@
 import usJson from '@/data/us.json';
+import { zoneColor } from './us-colors';
 
 export interface UsZone {
   key: string;
@@ -60,20 +61,34 @@ export function statesIn(zoneKey: string): UsStateEntry[] {
   return data.zoneStates[zoneKey] ?? [];
 }
 
-/**
- * Zone colours run blue through red from west to east, so the map reads the way
- * the day does — and stay distinguishable from the hour ramp used on the world map.
- */
-export const ZONE_COLOR: Record<string, string> = {
-  pacific: '#3f8ed0',
-  mountain: '#8a6fd2',
-  central: '#d9803c',
-  eastern: '#c4544e',
-  arizona: '#a8762f',
-  alaska: '#4a9e8c',
-  hawaii: '#6d7fa8',
-};
-
-export function zoneColor(key: string): string {
-  return ZONE_COLOR[key] ?? '#6b7280';
+export { ZONE_COLOR, zoneColor } from './us-colors';
+export interface UsStateRow {
+  fips: string;
+  name: string;
+  usps: string;
+  zoneKey: string;
+  /** IANA zone for the zone covering most of the state. */
+  zone: string;
+  short: string;
+  split: boolean;
 }
+
+/**
+ * One row per state for the "time now" grid — the zone covering most of the
+ * state, with split states flagged so the grid can say so.
+ */
+export const usStateList: UsStateRow[] = usShapes
+  .filter((s) => s.usps)
+  .map((s) => {
+    const z = allUsZones[s.mapZone];
+    return {
+      fips: s.fips,
+      name: s.name,
+      usps: s.usps as string,
+      zoneKey: s.mapZone,
+      zone: z.zone,
+      short: z.short,
+      split: s.split,
+    };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));

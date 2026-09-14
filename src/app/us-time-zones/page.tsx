@@ -4,8 +4,11 @@ import { PageHeader } from '@/components/PageHeader';
 import { UsMap } from '@/components/map/UsMap';
 import { UsZoneClock } from '@/components/tools/UsZoneClock';
 import {
-  allUsZones, continentalZones, outlyingZones, statesIn, usSplitStates, zoneColor,
+  allUsZones, continentalZones, outlyingZones, statesIn, usSplitStates, usStateList, zoneColor,
 } from '@/lib/us';
+import { UsSettingsProvider } from '@/components/us/UsSettings';
+import { UsToolbar } from '@/components/us/UsToolbar';
+import { StateTimeGrid } from '@/components/us/StateTimeGrid';
 import { abbreviation, dstState, formatUtcLabel, nextTransition, offsetMinutes } from '@/lib/time';
 import { relativeFuture } from '@/lib/format';
 
@@ -33,6 +36,7 @@ export default function UsTimeZonesPage() {
         lede="The contiguous United States runs on four time zones — Pacific, Mountain, Central and Eastern — each one hour apart. Here is what time it is in each right now, and which states sit in which."
       />
 
+      <UsSettingsProvider>
       <div className="shell py-8">
         {/* Live strip of the four zones */}
         <section aria-label="Current time in each US zone" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -52,6 +56,7 @@ export default function UsTimeZonesPage() {
         {/* Map */}
         <section className="mt-8">
           <div className="card overflow-hidden">
+            <UsToolbar states={usStateList} />
             <div className="relative aspect-[5/3] w-full bg-canvas">
               <UsMap initialNow={now} />
             </div>
@@ -80,6 +85,18 @@ export default function UsTimeZonesPage() {
             across a boundary — those are hatched, and listed in full further down. Hover any state
             for its current local time.
           </p>
+        </section>
+
+        {/* Current time in every state */}
+        <section id="state-times" className="mt-14 scroll-mt-24">
+          <h2 className="display text-2xl font-bold tracking-tight">US time right now</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+            Current local time in every state, colour-keyed by zone. Use the clock toggle above to
+            switch between 12- and 24-hour.
+          </p>
+          <div className="mt-5">
+            <StateTimeGrid states={usStateList} initialNow={now} />
+          </div>
         </section>
 
         {/* One section per zone */}
@@ -316,6 +333,7 @@ export default function UsTimeZonesPage() {
           </div>
         </section>
       </div>
+      </UsSettingsProvider>
     </>
   );
 }

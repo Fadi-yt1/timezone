@@ -60,11 +60,13 @@ export function UsMap({ initialNow }: { initialNow: number }) {
           ))}
         </g>
 
-        <g className="pointer-events-none">
+        {/* Both label sets ship in the HTML; the toolbar toggles which group shows,
+            so switching modes costs no round trip and no extra JS payload. */}
+        <g className="pointer-events-none" data-labels="abbr">
           {usShapes.map((s) =>
             s.cx !== undefined && s.usps && !LABEL_SKIP.has(s.name) ? (
               <text
-                key={`l-${s.fips}`}
+                key={`a-${s.fips}`}
                 x={s.cx}
                 y={s.cy}
                 textAnchor="middle"
@@ -75,6 +77,25 @@ export function UsMap({ initialNow }: { initialNow: number }) {
                 opacity="0.72"
               >
                 {s.usps}
+              </text>
+            ) : null,
+          )}
+        </g>
+        <g className="pointer-events-none" data-labels="name" style={{ display: 'none' }}>
+          {usShapes.map((s) =>
+            s.cx !== undefined && s.usps && !LABEL_SKIP.has(s.name) ? (
+              <text
+                key={`n-${s.fips}`}
+                x={s.cx}
+                y={s.cy}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill="#0b1220"
+                opacity="0.78"
+              >
+                {s.name}
               </text>
             ) : null,
           )}
