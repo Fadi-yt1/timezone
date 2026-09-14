@@ -5,6 +5,8 @@ import { MapLegend } from '@/components/map/MapLegend';
 import { ClockCard } from '@/components/ClockCard';
 import { SearchBox } from '@/components/SearchBox';
 import { featuredCities, listedZones, countries } from '@/lib/data';
+import { UsZonesHome } from '@/components/us/UsZonesHome';
+import { PrintableMaps } from '@/components/us/PrintableMaps';
 import { site } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
@@ -105,6 +107,12 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <UsZonesHome initialNow={now} />
+
+      <div className="shell">
+        <PrintableMaps />
+      </div>
 
       <section className="shell py-10">
         <h2 className="display mb-5 text-2xl font-bold tracking-tight">Tools</h2>
