@@ -40,7 +40,10 @@ export default function UsTimeZonesPage() {
       <UsSettingsProvider>
       <div className="shell py-8">
         {/* Live strip of the four zones */}
-        <section aria-label="Current time in each US zone" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section
+          aria-label="Current time in each US zone"
+          className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {continentalZones.map((z) => (
             <UsZoneClock
               key={z.key}
@@ -58,7 +61,7 @@ export default function UsTimeZonesPage() {
         <section className="mt-8">
           <div className="card overflow-hidden">
             <UsToolbar states={usStateList} />
-            <div className="relative aspect-[5/3] w-full bg-canvas">
+            <div className="relative aspect-[16/10] w-full bg-canvas">
               <UsMap initialNow={now} />
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line px-4 py-3.5 sm:px-5">

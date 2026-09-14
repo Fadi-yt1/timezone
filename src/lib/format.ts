@@ -76,11 +76,15 @@ const MONTHS = [
 export function formatDate(
   timeZone: string,
   at: Instant,
-  { style = 'long' as 'long' | 'medium' | 'short' } = {},
+  { style = 'long' as 'long' | 'medium' | 'short' | 'caps' } = {},
 ): string {
   const p = zonedParts(timeZone, at);
   const weekday = WEEKDAYS[new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay()];
   const month = MONTHS[p.month - 1];
+  // "MON SEP 14" — the compact stamp under a clock face.
+  if (style === 'caps') {
+    return `${weekday.slice(0, 3)} ${month.slice(0, 3)} ${p.day}`.toUpperCase();
+  }
   if (style === 'short') return `${p.day} ${month.slice(0, 3)}`;
   if (style === 'medium') return `${weekday.slice(0, 3)}, ${p.day} ${month.slice(0, 3)} ${p.year}`;
   return `${weekday}, ${p.day} ${month} ${p.year}`;

@@ -40,7 +40,7 @@ export function SiteFooter() {
             <span className="display font-bold">{site.name}</span>
           </div>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-faint">
-            Live local time for every IANA time zone, built on the public tz database.
+            Live local time for every time zone in the world.
           </p>
         </div>
 
