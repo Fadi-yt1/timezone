@@ -15,6 +15,7 @@ const groups = [
   {
     title: 'Reference',
     links: [
+      { href: '/us-time-zones', label: 'US time zones' },
       { href: '/time-zones', label: 'All time zones' },
       { href: '/countries', label: 'Countries' },
       { href: '/utc-offset', label: 'UTC offsets' },

@@ -1,0 +1,65 @@
+# zone_key	state	usps	coverage	note
+eastern	Connecticut	CT	full	
+eastern	Delaware	DE	full	
+eastern	District of Columbia	DC	full	
+eastern	Florida	FL	partial	Peninsula and most of the state
+eastern	Georgia	GA	full	
+eastern	Indiana	IN	partial	All but a few counties near Chicago and Evansville
+eastern	Kentucky	KY	partial	Eastern half, including Lexington and Louisville
+eastern	Maine	ME	full	
+eastern	Maryland	MD	full	
+eastern	Massachusetts	MA	full	
+eastern	Michigan	MI	partial	All but four Upper Peninsula counties on the Wisconsin border
+eastern	New Hampshire	NH	full	
+eastern	New Jersey	NJ	full	
+eastern	New York	NY	full	
+eastern	North Carolina	NC	full	
+eastern	Ohio	OH	full	
+eastern	Pennsylvania	PA	full	
+eastern	Rhode Island	RI	full	
+eastern	South Carolina	SC	full	
+eastern	Tennessee	TN	partial	Eastern third, including Knoxville and Chattanooga
+eastern	Vermont	VT	full	
+eastern	Virginia	VA	full	
+eastern	West Virginia	WV	full	
+central	Alabama	AL	full	
+central	Arkansas	AR	full	
+central	Florida	FL	partial	Western panhandle, west of the Apalachicola River
+central	Illinois	IL	full	
+central	Indiana	IN	partial	Counties near Chicago and Evansville
+central	Iowa	IA	full	
+central	Kansas	KS	partial	All but four counties in the far west
+central	Kentucky	KY	partial	Western half, including Bowling Green and Paducah
+central	Louisiana	LA	full	
+central	Michigan	MI	partial	Four Upper Peninsula counties on the Wisconsin border
+central	Minnesota	MN	full	
+central	Mississippi	MS	full	
+central	Missouri	MO	full	
+central	Nebraska	NE	partial	Eastern and central, including Omaha and Lincoln
+central	North Dakota	ND	partial	Eastern and central, including Fargo and Bismarck
+central	Oklahoma	OK	full	
+central	South Dakota	SD	partial	Eastern half, including Sioux Falls
+central	Tennessee	TN	partial	Middle and west, including Nashville and Memphis
+central	Texas	TX	partial	All but two counties in the far west
+central	Wisconsin	WI	full	
+mountain	Arizona	AZ	full	Stays on standard time all year; the Navajo Nation does observe DST
+mountain	Colorado	CO	full	
+mountain	Idaho	ID	partial	Southern Idaho, including Boise
+mountain	Kansas	KS	partial	Four counties in the far west
+mountain	Montana	MT	full	
+mountain	Nebraska	NE	partial	Western panhandle
+mountain	Nevada	NV	partial	West Wendover only
+mountain	New Mexico	NM	full	
+mountain	North Dakota	ND	partial	Southwestern corner
+mountain	Oregon	OR	partial	Malheur County
+mountain	South Dakota	SD	partial	Western half, including Rapid City
+mountain	Texas	TX	partial	El Paso and Hudspeth counties
+mountain	Utah	UT	full	
+mountain	Wyoming	WY	full	
+pacific	California	CA	full	
+pacific	Idaho	ID	partial	Northern panhandle, including Coeur d'Alene
+pacific	Nevada	NV	partial	All but West Wendover
+pacific	Oregon	OR	partial	All but Malheur County
+pacific	Washington	WA	full	
+alaska	Alaska	AK	partial	Almost all of the state; the far western Aleutians use Hawaii-Aleutian Time
+hawaii	Hawaii	HI	full	Stays on standard time all year

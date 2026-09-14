@@ -13,6 +13,7 @@ export const nav = [
   { href: '/converter', label: 'Converter' },
   { href: '/meeting-planner', label: 'Meeting planner' },
   { href: '/world-clock', label: 'World clock' },
+  { href: '/us-time-zones', label: 'US zones' },
   { href: '/time-zones', label: 'Time zones' },
   { href: '/dst', label: 'DST' },
 ] as const;

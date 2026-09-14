@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticPages = [
     '', '/map', '/converter', '/meeting-planner', '/world-clock',
-    '/time-zones', '/countries', '/utc-offset', '/dst', '/about', '/api',
+    '/us-time-zones', '/time-zones', '/countries', '/utc-offset', '/dst', '/about', '/api',
   ].map((p) => ({
     url: url(p || '/'),
     lastModified: now,
