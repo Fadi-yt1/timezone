@@ -2,7 +2,7 @@
   "name": "meridian-world-time",
   "version": "1.0.0",
   "private": true,
-  "description": "Meridian \u2014 interactive world time zone map, converter and meeting planner.",
+  "description": "Meridian — interactive world time zone map, converter and meeting planner.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

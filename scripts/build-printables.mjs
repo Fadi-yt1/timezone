@@ -16,6 +16,7 @@ const ZONES = [
   { key: 'arizona',  label: 'Arizona (no DST)', color: '#a8762f', grey: '#a8a8a8' },
   { key: 'alaska',   label: 'Alaska',   color: '#4a9e8c', grey: '#c6c6c6' },
   { key: 'hawaii',   label: 'Hawaii',   color: '#6d7fa8', grey: '#e2e2e2' },
+  { key: 'atlantic', label: 'Puerto Rico (Atlantic)', color: '#c0567f', grey: '#8e8e8e' },
 ];
 const byKey = Object.fromEntries(ZONES.map((z) => [z.key, z]));
 
@@ -40,16 +41,25 @@ function buildSvg({ mode, title, subtitle }) {
   const fillFor = (s) => {
     if (mode === 'blank') return '#ffffff';
     const z = byKey[s.mapZone];
+    if (!z) throw new Error(`printable map has no colour for zone "${s.mapZone}"`);
     return mode === 'color' ? z.color : z.grey;
   };
   // Grey prints need a darker outline to separate neighbouring shades.
   const strokeFor = () => (mode === 'color' ? '#ffffff' : '#333333');
   const strokeW = mode === 'color' ? 1 : 0.8;
 
+  // States a zone boundary crosses render one shape per zone, merged from the
+  // counties in it, so the printed boundary follows real county lines.
   const paths = shapes
-    .map(
-      (s) =>
-        `<path d="${s.d}" fill="${fillFor(s)}" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
+    .flatMap((s) =>
+      s.parts
+        ? s.parts.map(
+            (part) =>
+              `<path d="${part.d}" fill="${fillFor({ ...s, mapZone: part.zone })}" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
+          )
+        : [
+            `<path d="${s.d}" fill="${fillFor(s)}" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
+          ],
     )
     .join('\n      ');
 
@@ -96,7 +106,7 @@ function buildSvg({ mode, title, subtitle }) {
       ${labels}
   </g>
   ${legend ? `<g>\n      ${legend}\n  </g>` : ''}
-  <text x="${W / 2}" y="${H - 20}" font-size="11" fill="#8a93a5" text-anchor="middle">Time zone boundaries follow county lines, so thirteen states are split across two zones.</text>
+  <text x="${W / 2}" y="${H - 20}" font-size="11" fill="#8a93a5" text-anchor="middle">Zone boundaries follow county lines; the states they cross are shown in both zones.</text>
 </svg>
 `;
 }

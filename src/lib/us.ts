@@ -18,10 +18,9 @@ export interface UsStateShape {
   mapZone: string;
   zones: string[];
   split: boolean;
-  /** Clip region covering the part of a split state in the second zone. */
-  splitClip?: string;
-  /** Zone key that region belongs to. */
-  splitZone?: string;
+  /** For states a zone boundary crosses: one merged shape per zone, built
+   *  from the counties in it, so the boundary follows real county lines. */
+  parts?: { zone: string; d: string; dLite: string; counties: number }[];
   cx?: number;
   cy?: number;
 }

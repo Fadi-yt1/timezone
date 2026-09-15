@@ -44,47 +44,37 @@ export function UsMap({
         role="img"
         aria-label="Map of United States time zones by state"
       >
-        <defs>
-          {usShapes.map((s) =>
-            s.splitClip ? (
-              <clipPath key={`cp-${s.fips}`} id={`tzsplit-${s.fips}`}>
-                <path d={s.splitClip} />
-              </clipPath>
-            ) : null,
-          )}
-        </defs>
-
         <g>
-          {usShapes.map((s) => (
-            <path
-              key={s.fips}
-              d={detail === 'lite' ? (s.dLite ?? s.d) : s.d}
-              data-fips={s.fips}
-              fill={zoneColor(s.mapZone)}
-              stroke="rgb(var(--canvas))"
-              strokeWidth="1"
-              className="transition-[filter] duration-150 hover:brightness-125"
-            >
-              <title>{s.name}</title>
-            </path>
-          ))}
-        </g>
-
-        {/* A zone boundary runs through thirteen states; the far side of that
-            boundary is painted in its own zone colour over the base fill.
-            Not interactive, so the base path keeps handling hover. */}
-        <g className="pointer-events-none">
           {usShapes.map((s) =>
-            s.splitClip && s.splitZone ? (
+            s.parts ? (
+              // A zone boundary crosses this state: one shape per zone, merged
+              // from the counties in it.
+              s.parts.map((part) => (
+                <path
+                  key={`${s.fips}-${part.zone}`}
+                  d={detail === 'lite' ? part.dLite : part.d}
+                  data-fips={s.fips}
+                  fill={zoneColor(part.zone)}
+                  stroke="rgb(var(--canvas))"
+                  strokeWidth="1"
+                  className="transition-[filter] duration-150 hover:brightness-125"
+                >
+                  <title>{s.name}</title>
+                </path>
+              ))
+            ) : (
               <path
-                key={`sp-${s.fips}`}
+                key={s.fips}
                 d={detail === 'lite' ? (s.dLite ?? s.d) : s.d}
-                fill={zoneColor(s.splitZone)}
+                data-fips={s.fips}
+                fill={zoneColor(s.mapZone)}
                 stroke="rgb(var(--canvas))"
                 strokeWidth="1"
-                clipPath={`url(#tzsplit-${s.fips})`}
-              />
-            ) : null,
+                className="transition-[filter] duration-150 hover:brightness-125"
+              >
+                <title>{s.name}</title>
+              </path>
+            ),
           )}
         </g>
 
