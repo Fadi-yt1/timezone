@@ -62,7 +62,10 @@ export default function UsTimeZonesPage() {
             <UsToolbar states={usStateList} />
             <MapCollapse>
               <div className="relative aspect-[16/10] w-full bg-canvas">
-                <UsMap initialNow={now} />
+                {/* Same geometry as the home page. At the size this renders,
+                    the detailed coastlines read as noise rather than detail,
+                    and cost about 122 KB of path data. */}
+                <UsMap initialNow={now} detail="lite" />
               </div>
             </MapCollapse>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line px-4 py-3.5 sm:px-5">
