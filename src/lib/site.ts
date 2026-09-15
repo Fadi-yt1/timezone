@@ -5,7 +5,7 @@ export const site = {
     'An interactive world time zone map with live local times for every IANA zone, a ' +
     'time zone converter, a meeting planner that finds overlapping working hours, and ' +
     'daylight saving transition dates for 240+ countries.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://meridian-world-time.netlify.app',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fadi-yt1.github.io/timezone',
 } as const;
 
 export const nav = [

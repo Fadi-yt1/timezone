@@ -14,8 +14,6 @@ import { PrintableMaps } from '@/components/us/PrintableMaps';
 import { abbreviation, dstState, formatUtcLabel, nextTransition, offsetMinutes } from '@/lib/time';
 import { relativeFuture } from '@/lib/format';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'US time zones — Pacific, Mountain, Central and Eastern',
   description:

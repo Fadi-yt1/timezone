@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { MeetingPlanner } from '@/components/tools/MeetingPlanner';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'Meeting planner',
   description:

@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { Converter } from '@/components/tools/Converter';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'Time zone converter',
   description:

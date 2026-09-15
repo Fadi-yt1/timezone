@@ -7,10 +7,14 @@ import { countriesForZone, listedZones, offsetGroups } from '@/lib/data';
 import { offsetHref, parseOffsetSlug } from '@/lib/format';
 import { formatUtcLabel, offsetMinutes } from '@/lib/time';
 
-export const dynamic = 'force-dynamic';
-
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return offsetGroups().map((g) => ({ slug: offsetHref(g.offset).split('/').pop() as string }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

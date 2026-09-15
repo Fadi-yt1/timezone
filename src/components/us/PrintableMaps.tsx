@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset';
 interface Printable {
   file: string;
   title: string;
@@ -45,14 +46,14 @@ export function PrintableMaps() {
         {PRINTABLES.map((p) => (
           <li key={p.file} className="card flex flex-col overflow-hidden">
             <a
-              href={`/printables/${p.file}.svg`}
+              href={asset(`/printables/${p.file}.svg`)}
               target="_blank"
               rel="noreferrer noopener"
               className="block border-b border-line bg-white transition-opacity hover:opacity-90"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`/printables/${p.file}-preview.png`}
+                src={asset(`/printables/${p.file}-preview.png`)}
                 alt={`Preview of the ${p.title.toLowerCase()}`}
                 width={550}
                 height={430}
@@ -65,10 +66,10 @@ export function PrintableMaps() {
               <h3 className="font-semibold text-ink">{p.title}</h3>
               <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">{p.body}</p>
               <div className="mt-4 flex gap-2">
-                <a href={`/printables/${p.file}.svg`} download className="btn btn-primary flex-1 px-3 py-2 text-xs">
+                <a href={asset(`/printables/${p.file}.svg`)} download className="btn btn-primary flex-1 px-3 py-2 text-xs">
                   SVG
                 </a>
-                <a href={`/printables/${p.file}.png`} download className="btn flex-1 px-3 py-2 text-xs">
+                <a href={asset(`/printables/${p.file}.png`)} download className="btn flex-1 px-3 py-2 text-xs">
                   PNG
                 </a>
               </div>

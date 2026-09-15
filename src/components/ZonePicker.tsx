@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { SearchHit } from '@/lib/data';
+import { searchClient } from '@/lib/client-search';
 
 /**
  * Type-ahead zone chooser used by the converter, planner and world clock.
- * Queries the same /api/v1/search endpoint the header search uses.
+ * Ranks against the same prebuilt index the header search uses.
  */
 export function ZonePicker({
   label,
@@ -35,9 +36,10 @@ export function ZonePicker({
     }
     const controller = new AbortController();
     const t = setTimeout(() => {
-      fetch(`/api/v1/search?q=${encodeURIComponent(q)}&limit=7`, { signal: controller.signal })
-        .then((r) => r.json())
-        .then((d) => {
+      searchClient(q, 7)
+        .then((results) => {
+          if (controller.signal.aborted) return;
+          const d = { results };
           setHits((d.results ?? []).filter((h: SearchHit) => h.zone));
           setActive(0);
           setOpen(true);

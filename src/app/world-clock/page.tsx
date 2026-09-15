@@ -3,8 +3,6 @@ import { PageHeader } from '@/components/PageHeader';
 import { WorldClock } from '@/components/tools/WorldClock';
 import { featuredCities } from '@/lib/data';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'World clock',
   description:

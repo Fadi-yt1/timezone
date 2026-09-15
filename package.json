@@ -2,13 +2,15 @@
   "name": "meridian-world-time",
   "version": "1.0.0",
   "private": true,
-  "description": "Meridian — interactive world time zone map, converter and meeting planner.",
+  "description": "Meridian \u2014 interactive world time zone map, converter and meeting planner.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "data": "node scripts/build-dataset.mjs"
+    "data": "node scripts/build-dataset.mjs && node scripts/build-map.mjs && node scripts/build-us.mjs && node scripts/build-search-index.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
+    "search-index": "node scripts/build-search-index.mjs"
   },
   "dependencies": {
     "d3-geo": "^3.1.1",

@@ -114,6 +114,21 @@ export default function ApiPage() {
       />
 
       <div className="shell py-8">
+        {process.env.NEXT_PUBLIC_STATIC_BUILD === 'true' && (
+          <div className="card mb-6 border-accent/40 bg-accent/5 p-5">
+            <h2 className="display text-base font-semibold text-ink">
+              Not available on this deployment
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              This copy of the site is a static build hosted on GitHub Pages, which serves files
+              only and cannot run the endpoints below. Everything the site itself shows — live
+              clocks, conversion, the meeting grid, search — is computed in your browser, so the
+              pages work without them. The API is documented here for anyone deploying the
+              project to a Node host, where it runs as described.
+            </p>
+          </div>
+        )}
+
         <section className="card mb-8 p-5 sm:p-6">
           <h2 className="display text-lg font-semibold">Base URL</h2>
           <pre className="clock mt-3 overflow-x-auto rounded-lg border border-line bg-canvas p-3.5 text-sm text-accent">

@@ -9,8 +9,6 @@ import { UsZonesHome } from '@/components/us/UsZonesHome';
 import { PrintableMaps } from '@/components/us/PrintableMaps';
 import { site } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: `${site.name} — ${site.tagline}`,
   description: site.description,

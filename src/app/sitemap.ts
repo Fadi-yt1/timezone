@@ -3,7 +3,8 @@ import { countries, listedZones, offsetGroups, utcZones } from '@/lib/data';
 import { offsetHref } from '@/lib/format';
 import { site } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
+// Required by output: 'export' — both are emitted as files at build time.
+export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -5,8 +5,6 @@ import { offsetGroups } from '@/lib/data';
 import { offsetHref } from '@/lib/format';
 import { formatUtcLabel, offsetMinutes } from '@/lib/time';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'UTC offsets',
   description:

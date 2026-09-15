@@ -7,8 +7,6 @@ import { offsetGroups } from '@/lib/data';
 import { formatUtcLabel, offsetMinutes } from '@/lib/time';
 import { offsetHref } from '@/lib/format';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'World time zone map',
   description:

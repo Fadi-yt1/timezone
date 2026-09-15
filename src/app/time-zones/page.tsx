@@ -6,8 +6,6 @@ import { listedZones, utcZones } from '@/lib/data';
 import { formatUtcLabel, offsetMinutes } from '@/lib/time';
 import { formatClock } from '@/lib/format';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'All time zones',
   description:

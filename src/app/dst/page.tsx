@@ -5,8 +5,6 @@ import { countriesForZone, listedZones } from '@/lib/data';
 import { relativeFuture } from '@/lib/format';
 import { formatUtcLabel, nextTransition } from '@/lib/time';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'Daylight saving time changes',
   description:

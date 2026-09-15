@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { SearchHit } from '@/lib/data';
+import { searchClient } from '@/lib/client-search';
 
 const KIND_LABEL: Record<string, string> = { city: 'City', zone: 'Zone', country: 'Country' };
 
@@ -31,9 +32,10 @@ export function SearchBox({
     const controller = new AbortController();
     // Debounced so typing doesn't fire a request per keystroke.
     const t = setTimeout(() => {
-      fetch(`/api/v1/search?q=${encodeURIComponent(q)}&limit=8`, { signal: controller.signal })
-        .then((r) => r.json())
-        .then((d) => {
+      searchClient(q, 8)
+        .then((results) => {
+          if (controller.signal.aborted) return;
+          const d = { results };
           setHits(d.results ?? []);
           setActive(0);
           setOpen(true);

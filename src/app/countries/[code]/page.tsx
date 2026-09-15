@@ -4,14 +4,18 @@ import { notFound } from 'next/navigation';
 import { PageHeader } from '@/components/PageHeader';
 import { ZoneHeadline } from '@/components/ZoneDetail';
 import { ClockCard } from '@/components/ClockCard';
-import { cities, getCountry, zonesForCountry } from '@/lib/data';
+import { cities, countries, getCountry, zonesForCountry } from '@/lib/data';
 import { formatPopulation, relativeFuture } from '@/lib/format';
 import { dstState, formatUtcLabel, offsetMinutes } from '@/lib/time';
 
-export const dynamic = 'force-dynamic';
-
 interface Props {
   params: Promise<{ code: string }>;
+}
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return countries.map((c) => ({ code: c.code.toLowerCase() }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

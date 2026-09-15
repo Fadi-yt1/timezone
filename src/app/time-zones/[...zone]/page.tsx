@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { PageHeader } from '@/components/PageHeader';
 import { ZoneHeadline } from '@/components/ZoneDetail';
 import { ClockCard } from '@/components/ClockCard';
-import { citiesInZone, countriesForZone, getZone, listedZones } from '@/lib/data';
+import { citiesInZone, countriesForZone, getZone, listedZones, utcZones } from '@/lib/data';
 import { formatPopulation, offsetHref, relativeFuture } from '@/lib/format';
 import { dstState, formatUtcLabel, offsetMinutes, transitionsInYear } from '@/lib/time';
 
-export const dynamic = 'force-dynamic';
-
 interface Props {
   params: Promise<{ zone: string[] }>;
+}
+
+// Only canonical IANA spellings are pre-rendered; alias URLs are not emitted.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return [...listedZones, ...utcZones].map((z) => ({ zone: z.zone.split('/') }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -34,8 +39,6 @@ export default async function ZonePage({ params }: Props) {
   const requested = segs.join('/');
   const z = getZone(requested);
   if (!z) notFound();
-  // Alias URLs settle on the canonical IANA spelling.
-  if (z.zone !== requested) redirect(`/time-zones/${z.zone}`);
 
   const now = Date.now();
   const offset = offsetMinutes(z.zone, now);
