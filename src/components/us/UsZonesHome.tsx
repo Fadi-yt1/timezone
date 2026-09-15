@@ -3,6 +3,7 @@ import { UsMap } from '@/components/map/UsMap';
 import { UsZoneClock } from '@/components/tools/UsZoneClock';
 import { UsSettingsProvider } from './UsSettings';
 import { UsToolbar } from './UsToolbar';
+import { MapCollapse } from './MapCollapse';
 import { continentalZones, usStateList, zoneColor } from '@/lib/us';
 
 /**
@@ -45,9 +46,11 @@ export function UsZonesHome({ initialNow }: { initialNow: number }) {
 
         <div className="card print-map mt-5 overflow-hidden">
           <UsToolbar states={usStateList} />
-          <div className="relative aspect-[16/10] w-full bg-canvas">
-            <UsMap initialNow={initialNow} detail="lite" />
-          </div>
+          <MapCollapse>
+            <div className="relative aspect-[16/10] w-full bg-canvas">
+              <UsMap initialNow={initialNow} detail="lite" />
+            </div>
+          </MapCollapse>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line px-4 py-3.5 sm:px-5">
             <span className="label">Zones</span>
             {continentalZones.map((z) => (

@@ -12,7 +12,8 @@ const LABEL_OPTIONS: { value: LabelMode; label: string }[] = [
 
 /** Display controls sitting above the map: label mode, clock format, find a state, print. */
 export function UsToolbar({ states }: { states: UsStateRow[] }) {
-  const { hour12, setHour12, labelMode, setLabelMode, setFocused } = useUsSettings();
+  const { hour12, setHour12, labelMode, setLabelMode, setFocused, mapHidden, setMapHidden } =
+    useUsSettings();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -115,6 +116,29 @@ export function UsToolbar({ states }: { states: UsStateRow[] }) {
           </ul>
         )}
       </div>
+
+      <button
+        type="button"
+        onClick={() => setMapHidden(!mapHidden)}
+        aria-pressed={mapHidden}
+        className="btn px-3 py-1.5 text-xs"
+      >
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+          {mapHidden ? (
+            <>
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="2.6" />
+            </>
+          ) : (
+            <path
+              d="M3 3l18 18M10.6 10.7a2.6 2.6 0 0 0 3.7 3.7M6.5 6.6C4 8.2 2 12 2 12s3.5 7 10 7c2 0 3.7-.6 5.2-1.5M19.9 15.2C21.3 13.7 22 12 22 12s-3.5-7-10-7c-.9 0-1.7.1-2.5.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+        </svg>
+        {mapHidden ? 'Show map' : 'Hide map'}
+      </button>
 
       <button
         type="button"

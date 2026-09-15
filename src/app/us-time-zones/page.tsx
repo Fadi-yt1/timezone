@@ -9,6 +9,7 @@ import {
 import { UsSettingsProvider } from '@/components/us/UsSettings';
 import { UsToolbar } from '@/components/us/UsToolbar';
 import { StateTimeGrid } from '@/components/us/StateTimeGrid';
+import { MapCollapse } from '@/components/us/MapCollapse';
 import { PrintableMaps } from '@/components/us/PrintableMaps';
 import { abbreviation, dstState, formatUtcLabel, nextTransition, offsetMinutes } from '@/lib/time';
 import { relativeFuture } from '@/lib/format';
@@ -61,9 +62,11 @@ export default function UsTimeZonesPage() {
         <section className="mt-8">
           <div className="card print-map overflow-hidden">
             <UsToolbar states={usStateList} />
-            <div className="relative aspect-[16/10] w-full bg-canvas">
-              <UsMap initialNow={now} />
-            </div>
+            <MapCollapse>
+              <div className="relative aspect-[16/10] w-full bg-canvas">
+                <UsMap initialNow={now} />
+              </div>
+            </MapCollapse>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line px-4 py-3.5 sm:px-5">
               <span className="label">Zones</span>
               {[...continentalZones, ...outlyingZones].map((z) => (

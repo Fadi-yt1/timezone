@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { feature } from 'topojson-client';
 import { presimplify, simplify, quantile } from 'topojson-simplify';
-import { geoAlbersUsa, geoPath } from 'd3-geo';
+import { geoAlbers, geoAlbersUsa, geoPath } from 'd3-geo';
 
 const OUT = path.join(process.cwd(), 'src/data');
 const W = 1000;
@@ -22,6 +22,7 @@ const OUTLYING = {
   arizona: { key: 'arizona', name: 'Mountain Time (no DST)', short: 'MST', zone: 'America/Phoenix' },
   alaska:  { key: 'alaska',  name: 'Alaska Time',            short: 'AKT', zone: 'America/Anchorage' },
   hawaii:  { key: 'hawaii',  name: 'Hawaii–Aleutian Time',   short: 'HST', zone: 'Pacific/Honolulu' },
+  atlantic:{ key: 'atlantic',name: 'Atlantic Time',          short: 'AST', zone: 'America/Puerto_Rico' },
 };
 
 // For split states, the zone covering most of the state's people and land.
@@ -32,7 +33,7 @@ const MAP_ZONE_OVERRIDE = {
   'South Dakota': 'central', Texas: 'central',
   Idaho: 'mountain', Arizona: 'arizona',
   Nevada: 'pacific', Oregon: 'pacific',
-  Alaska: 'alaska', Hawaii: 'hawaii',
+  Alaska: 'alaska', Hawaii: 'hawaii', 'Puerto Rico': 'atlantic',
 };
 
 // --- read the state/zone table ---
@@ -57,6 +58,10 @@ const liteStates = feature(liteTopo, liteTopo.objects.states);
 const projection = geoAlbersUsa().scale(1300).translate([W / 2, H / 2 - 20]);
 const toPath = geoPath(projection);
 
+const PR_ANCHOR = [868, 527];
+const prProjection = geoAlbers().rotate([66.4, 0]).center([0, 18.2]).scale(1300).translate(PR_ANCHOR);
+const prPath = geoPath(prProjection);
+
 const byState = new Map();
 for (const r of rows) {
   const list = byState.get(r.state) ?? [];
@@ -71,7 +76,7 @@ for (const f of states.features) {
   const entries = byState.get(name) ?? [];
   const mapZone = MAP_ZONE_OVERRIDE[name] ?? entries[0]?.zoneKey ?? null;
   if (!mapZone) { skipped.push(name); continue; }
-  const raw = toPath(f);
+  const raw = name === 'Puerto Rico' ? prPath(f) : toPath(f);
   if (!raw) { skipped.push(`${name} (outside Albers USA)`); continue; }
   const d = raw.replace(/-?\d+\.\d+/g, (n) => String(Math.round(Number(n) * 10) / 10));
   shapes.push({
@@ -88,7 +93,7 @@ for (const f of states.features) {
 // Coarse paths for the home-page teaser, keyed by FIPS.
 const lite = {};
 for (const f of liteStates.features) {
-  const raw = toPath(f);
+  const raw = f.properties?.name === 'Puerto Rico' ? prPath(f) : toPath(f);
   if (!raw) continue;
   lite[String(f.id)] = raw.replace(/-?\d+\.\d+/g, (n) => String(Math.round(Number(n) * 10) / 10));
 }
@@ -99,7 +104,7 @@ for (const s of shapes) {
 // Centroids for state labels on the map.
 for (const s of shapes) {
   const f = states.features.find((x) => String(x.id) === s.fips);
-  const c = toPath.centroid(f);
+  const c = s.name === 'Puerto Rico' ? prPath.centroid(f) : toPath.centroid(f);
   if (c && Number.isFinite(c[0])) {
     s.cx = Number(c[0].toFixed(1));
     s.cy = Number(c[1].toFixed(1));

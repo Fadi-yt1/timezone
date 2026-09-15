@@ -16,6 +16,8 @@ const zoneTips: Record<string, ZoneTip> = Object.fromEntries(
 // to a column on the right on a leader line — same treatment as the printables.
 const LEADER: Record<string, number> = {
   VT: 96, NH: 118, MA: 140, RI: 162, CT: 184, NJ: 208, DE: 230, MD: 252, DC: 274,
+  // Puerto Rico sits low and to the right, as its own inset.
+  PR: 527,
 };
 const LEADER_X = 990;
 /** Extra canvas to the right of the map for the leader-label column. */

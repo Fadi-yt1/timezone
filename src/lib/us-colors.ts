@@ -13,6 +13,7 @@ export const ZONE_COLOR: Record<string, string> = {
   arizona: '#a8762f',
   alaska: '#4a9e8c',
   hawaii: '#6d7fa8',
+  atlantic: '#c0567f',
 };
 
 export function zoneColor(key: string): string {

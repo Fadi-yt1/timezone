@@ -55,7 +55,9 @@ export const continentalZones: UsZone[] = ['pacific', 'mountain', 'central', 'ea
   (k) => data.zones[k],
 );
 
-export const outlyingZones: UsZone[] = ['arizona', 'alaska', 'hawaii'].map((k) => data.outlying[k]);
+export const outlyingZones: UsZone[] = ['arizona', 'alaska', 'hawaii', 'atlantic'].map(
+  (k) => data.outlying[k],
+);
 
 export const allUsZones: Record<string, UsZone> = { ...data.zones, ...data.outlying };
 
