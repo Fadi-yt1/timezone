@@ -59,7 +59,7 @@ export default function UsTimeZonesPage() {
 
         {/* Map */}
         <section className="mt-8">
-          <div className="card overflow-hidden">
+          <div className="card print-map overflow-hidden">
             <UsToolbar states={usStateList} />
             <div className="relative aspect-[16/10] w-full bg-canvas">
               <UsMap initialNow={now} />

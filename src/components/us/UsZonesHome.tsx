@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { UsMap } from '@/components/map/UsMap';
 import { UsZoneClock } from '@/components/tools/UsZoneClock';
 import { UsSettingsProvider } from './UsSettings';
-import { continentalZones, zoneColor } from '@/lib/us';
+import { UsToolbar } from './UsToolbar';
+import { continentalZones, usStateList, zoneColor } from '@/lib/us';
 
 /**
  * Condensed US section for the home page: the four continental zone clocks over
@@ -42,7 +43,8 @@ export function UsZonesHome({ initialNow }: { initialNow: number }) {
           ))}
         </div>
 
-        <div className="card mt-5 overflow-hidden">
+        <div className="card print-map mt-5 overflow-hidden">
+          <UsToolbar states={usStateList} />
           <div className="relative aspect-[16/10] w-full bg-canvas">
             <UsMap initialNow={initialNow} detail="lite" />
           </div>

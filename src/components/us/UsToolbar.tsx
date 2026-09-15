@@ -33,7 +33,10 @@ export function UsToolbar({ states }: { states: UsStateRow[] }) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-line px-4 py-3 sm:px-5">
+    <div
+      data-print-hide
+      className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-line px-4 py-3 sm:px-5"
+    >
       <div className="flex items-center gap-2">
         <span className="label">Labels</span>
         <div className="flex rounded-lg border border-line p-0.5">

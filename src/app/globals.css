@@ -146,6 +146,39 @@ body {
   background: transparent;
 }
 
+/*
+ * The toolbar's Print button prints the map, not the page around it.
+ *
+ * `visibility: hidden` was not enough: hidden elements keep their layout boxes,
+ * which spilled the sheet across several pages. Everything that neither is the
+ * map card nor contains it is removed from layout entirely, level by level.
+ */
+@media print {
+  body > header,
+  body > footer {
+    display: none !important;
+  }
+
+  /* At each level hide anything that is neither the map card, an ancestor of
+     it, nor one of its descendants — that last guard matters, or the card's own
+     children get hidden and it collapses to zero height. */
+  main > *:not(:has(.print-map)):not(.print-map):not(.print-map *),
+  main > * > *:not(:has(.print-map)):not(.print-map):not(.print-map *),
+  main > * > * > *:not(:has(.print-map)):not(.print-map):not(.print-map *),
+  main > * > * > * > *:not(:has(.print-map)):not(.print-map):not(.print-map *) {
+    display: none !important;
+  }
+
+  .print-map {
+    border: 0;
+    background: #fff !important;
+  }
+
+  .print-map [data-print-hide] {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
