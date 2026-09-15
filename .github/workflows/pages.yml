@@ -14,10 +14,12 @@ permissions:
   pages: write
   id-token: write
 
-# Let a running deploy finish rather than cancelling it mid-publish.
+# Two pushes close together previously raced for the same Pages deployment and
+# the older run failed with "in progress deployment". A newer commit supersedes
+# an older one here, so cancel the superseded run rather than letting both go.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
