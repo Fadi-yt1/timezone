@@ -69,7 +69,12 @@ export function UsMapLayer({
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    for (const p of host.querySelectorAll<SVGPathElement>('path[data-fips]')) {
+    for (const p of host.querySelectorAll<SVGElement>('[data-fips]')) {
+      // The per-zone fills of a split state are deliberately unstroked, so the
+      // boundary inside the state stays a colour change. Stroking them on
+      // focus would draw that line back in; the state's outline path carries
+      // the same data-fips and takes the highlight instead.
+      if (p.hasAttribute('data-nostroke')) continue;
       const on = focused !== null && p.getAttribute('data-fips') === focused;
       p.setAttribute('stroke', on ? 'rgb(var(--ink))' : 'rgb(var(--canvas))');
       p.setAttribute('stroke-width', on ? '2.5' : '1');
@@ -78,7 +83,7 @@ export function UsMapLayer({
 
   const onMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      const path = (e.target as Element).closest?.('path[data-fips]');
+      const path = (e.target as Element).closest?.('[data-fips]');
       const host = hostRef.current;
       if (!path || !host) {
         setTip(null);
@@ -107,7 +112,7 @@ export function UsMapLayer({
 
   const onClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      const path = (e.target as Element).closest?.('path[data-fips]');
+      const path = (e.target as Element).closest?.('[data-fips]');
       const fips = path?.getAttribute('data-fips');
       const state = states.find((s) => s.fips === fips);
       if (state) router.push(`#${state.zones[0]}`);
@@ -118,7 +123,7 @@ export function UsMapLayer({
   return (
     <div
       ref={hostRef}
-      className="relative h-full w-full [&_path[data-fips]]:cursor-pointer"
+      className="relative h-full w-full [&_[data-fips]]:cursor-pointer"
       onMouseMove={onMove}
       onMouseLeave={() => setTip(null)}
       onClick={onClick}

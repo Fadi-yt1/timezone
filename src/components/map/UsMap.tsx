@@ -35,6 +35,9 @@ export function UsMap({
   /** 'lite' swaps in simplified geometry — a third of the bytes, for teasers. */
   detail?: 'full' | 'lite';
 }) {
+  // Both maps can appear on one page, so the base paths the outlines point at
+  // need ids that do not collide between them.
+  const idBase = detail === 'lite' ? 'usl' : 'usf';
   return (
     <UsMapLayer states={meta} zoneTips={zoneTips} initialNow={initialNow}>
       <svg
@@ -47,21 +50,41 @@ export function UsMap({
         <g>
           {usShapes.map((s) =>
             s.parts ? (
-              // A zone boundary crosses this state: one shape per zone, merged
-              // from the counties in it.
-              s.parts.map((part) => (
+              // A zone boundary crosses this state. Fill the whole state in the
+              // zone holding most of its counties, then lay the remaining zones
+              // over it as shapes merged from their own counties. None of these
+              // is stroked, so a zone change reads as a change of colour rather
+              // than a line drawn through the state; the border is picked up
+              // from the base path by the <use> group below.
+              //
+              // Fill comes from this wrapper rather than the path, so that the
+              // <use> instance can override it: a presentation attribute set on
+              // the path itself would survive into the instance and paint over
+              // the map.
+              <g key={s.fips} fill={zoneColor(s.parts[0].zone)}>
                 <path
-                  key={`${s.fips}-${part.zone}`}
-                  d={detail === 'lite' ? part.dLite : part.d}
+                  id={`${idBase}-${s.fips}`}
+                  d={detail === 'lite' ? (s.dLite ?? s.d) : s.d}
                   data-fips={s.fips}
-                  fill={zoneColor(part.zone)}
-                  stroke="rgb(var(--canvas))"
-                  strokeWidth="1"
+                  data-nostroke="true"
                   className="transition-[filter] duration-150 hover:brightness-125"
                 >
                   <title>{s.name}</title>
                 </path>
-              ))
+                {s.parts.slice(1).map((part) => (
+                  <path
+                    key={part.zone}
+                    d={detail === 'lite' ? part.dLite : part.d}
+                    data-fips={s.fips}
+                    data-nostroke="true"
+                    fill={zoneColor(part.zone)}
+                    stroke="none"
+                    className="transition-[filter] duration-150 hover:brightness-125"
+                  >
+                    <title>{s.name}</title>
+                  </path>
+                ))}
+              </g>
             ) : (
               <path
                 key={s.fips}
@@ -76,6 +99,25 @@ export function UsMap({
               </path>
             ),
           )}
+        </g>
+
+        {/* Split states carry no stroke on their fills, so their borders are
+            drawn here, over the top. Each one re-uses the base path it was
+            filled with, so a state outline costs a tag rather than a second
+            copy of its geometry — about 34 KB across the twelve of them. */}
+        <g>
+          {usShapes
+            .filter((s) => s.parts)
+            .map((s) => (
+              <use
+                key={`${s.fips}-outline`}
+                href={`#${idBase}-${s.fips}`}
+                data-fips={s.fips}
+                fill="none"
+                stroke="rgb(var(--canvas))"
+                strokeWidth="1"
+              />
+            ))}
         </g>
 
         {/* Both label sets ship in the HTML; the toolbar toggles which group shows,

@@ -48,18 +48,38 @@ function buildSvg({ mode, title, subtitle }) {
   const strokeFor = () => (mode === 'color' ? '#ffffff' : '#333333');
   const strokeW = mode === 'color' ? 1 : 0.8;
 
-  // States a zone boundary crosses render one shape per zone, merged from the
-  // counties in it, so the printed boundary follows real county lines.
+  // A state a zone boundary crosses is filled once in the zone holding most of
+  // its counties, then the remaining zones go over it as shapes merged from
+  // their own counties, so the printed boundary follows real county lines.
+  // None of them is stroked: a zone change should read as a change of colour,
+  // not as a line drawn through the middle of the state. Fill sits on a
+  // wrapper rather than the path so that the <use> below can override it.
   const paths = shapes
     .flatMap((s) =>
       s.parts
-        ? s.parts.map(
-            (part) =>
-              `<path d="${part.d}" fill="${fillFor({ ...s, mapZone: part.zone })}" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
-          )
+        ? [
+            `<g fill="${fillFor({ ...s, mapZone: s.parts[0].zone })}"><path id="s${s.fips}" d="${s.d}"/></g>`,
+            ...s.parts
+              .slice(1)
+              .map(
+                (part) =>
+                  `<path d="${part.d}" fill="${fillFor({ ...s, mapZone: part.zone })}" stroke="none"/>`,
+              ),
+          ]
         : [
             `<path d="${s.d}" fill="${fillFor(s)}" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
           ],
+    )
+    .join('\n      ');
+
+  // Which leaves those states with no border of their own, so draw it here over
+  // the fills, re-using the path each was filled with rather than repeating its
+  // geometry.
+  const outlines = shapes
+    .filter((s) => s.parts)
+    .map(
+      (s) =>
+        `<use href="#s${s.fips}" xlink:href="#s${s.fips}" fill="none" stroke="${strokeFor()}" stroke-width="${strokeW}" stroke-linejoin="round"/>`,
     )
     .join('\n      ');
 
@@ -96,13 +116,14 @@ function buildSvg({ mode, title, subtitle }) {
         }).join('\n      ');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"
      font-family="Helvetica, Arial, sans-serif">
   <rect width="${W}" height="${H}" fill="#ffffff"/>
   <text x="${W / 2}" y="48" font-size="27" font-weight="700" fill="#11182a" text-anchor="middle">${esc(title)}</text>
   <text x="${W / 2}" y="72" font-size="14" fill="#5a6478" text-anchor="middle">${esc(subtitle)}</text>
   <g transform="translate(${(W - MW) / 2}, ${mapY})">
       ${paths}
+      ${outlines}
       ${labels}
   </g>
   ${legend ? `<g>\n      ${legend}\n  </g>` : ''}
