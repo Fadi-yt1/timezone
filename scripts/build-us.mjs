@@ -58,6 +58,100 @@ const liteStates = feature(liteTopo, liteTopo.objects.states);
 const projection = geoAlbersUsa().scale(1300).translate([W / 2, H / 2 - 20]);
 const toPath = geoPath(projection);
 
+/**
+ * Where the zone boundary runs through each split state.
+ *
+ * Real boundaries follow county lines and jog about; these are the meridian (or
+ * in Idaho's case, the parallel) they broadly track, which is enough to colour
+ * each side of a state correctly at map scale. `minority` is the zone on the
+ * `side` given — the other side takes the state's mapZone.
+ */
+const SPLIT_BOUNDARY = {
+  // Simple meridian splits.
+  FL: { axis: 'lon', at: -85.0,   side: 'west', minority: 'central' },
+  IN: { axis: 'lon', at: -87.20,  side: 'west', minority: 'central' },
+  KY: { axis: 'lon', at: -86.0,   side: 'west', minority: 'central' },
+  MI: { axis: 'lon', at: -87.6,   side: 'west', minority: 'central' },
+  TN: { axis: 'lon', at: -85.3,   side: 'east', minority: 'eastern' },
+  KS: { axis: 'lon', at: -101.6,  side: 'west', minority: 'mountain' },
+  NE: { axis: 'lon', at: -102.05, side: 'west', minority: 'mountain' },
+  SD: { axis: 'lon', at: -100.1,  side: 'west', minority: 'mountain' },
+  TX: { axis: 'lon', at: -105.0,  side: 'west', minority: 'mountain' },
+  NV: { axis: 'lon', at: -114.15, side: 'east', minority: 'mountain' },
+  // A parallel: Idaho's panhandle is Pacific, the south Mountain.
+  ID: { axis: 'lat', at: 45.52,   side: 'north', minority: 'pacific' },
+  // Corners: these zones cover one corner of the state, not a whole side, so a
+  // single line would repaint far too much of it.
+  ND: { axis: 'corner', lon: -101.0, lonSide: 'west', lat: 47.5, latSide: 'south', minority: 'mountain' },
+  OR: { axis: 'corner', lon: -117.9, lonSide: 'east', lat: 44.4, latSide: 'south', minority: 'mountain' },
+};
+
+/**
+ * Projected polygon covering the minority side of a split state, used as a
+ * clip path.
+ *
+ * The polygon is closed in *projected* space on purpose: Albers USA returns
+ * null for coordinates outside the country, so closing it with far-off
+ * lon/lat corners silently dropped them and collapsed the clip to a
+ * zero-width line. Only the boundary itself is projected; the polygon is then
+ * extended past the canvas edge in x or y.
+ */
+function splitClipPath(usps, projectionFn) {
+  const b = SPLIT_BOUNDARY[usps];
+  if (!b) return null;
+  const STEPS = 28;
+  const FAR = 9999;
+
+  const meridian = (lon, latFrom, latTo) => {
+    const pts = [];
+    for (let i = 0; i <= STEPS; i++) {
+      const pt = projectionFn([lon, latFrom + ((latTo - latFrom) * i) / STEPS]);
+      if (pt) pts.push(pt);
+    }
+    return pts;
+  };
+  const parallel = (lat, lonFrom, lonTo) => {
+    const pts = [];
+    for (let i = 0; i <= STEPS; i++) {
+      const pt = projectionFn([lonFrom + ((lonTo - lonFrom) * i) / STEPS, lat]);
+      if (pt) pts.push(pt);
+    }
+    return pts;
+  };
+  const toPath = (pts) =>
+    pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join('') + 'Z';
+
+  if (b.axis === 'lon') {
+    const line = meridian(b.at, 23, 51);
+    if (line.length < 2) return null;
+    const [fx, fy] = line[0];
+    const [lx, ly] = line[line.length - 1];
+    const far = b.side === 'west' ? -FAR : FAR;
+    return toPath([...line, [far, ly], [far, fy]]);
+  }
+
+  if (b.axis === 'lat') {
+    const line = parallel(b.at, -126, -66);
+    if (line.length < 2) return null;
+    const [fx, fy] = line[0];
+    const [lx, ly] = line[line.length - 1];
+    const far = b.side === 'north' ? -FAR : FAR;
+    return toPath([...line, [lx, far], [fx, far]]);
+  }
+
+  // Corner: walk the meridian to the corner, then the parallel out to the side,
+  // enclosing exactly the quadrant the zone occupies.
+  const latFrom = b.latSide === 'south' ? 23 : 51;
+  const lonTo = b.lonSide === 'west' ? -126 : -66;
+  const down = meridian(b.lon, latFrom, b.lat);
+  const across = parallel(b.lat, b.lon, lonTo);
+  if (down.length < 2 || across.length < 2) return null;
+  const corner = [...down, ...across];
+  const [sx, sy] = corner[0];
+  const [ex, ey] = corner[corner.length - 1];
+  return toPath([...corner, [ex, sy]]);
+}
+
 const PR_ANCHOR = [868, 527];
 const prProjection = geoAlbers().rotate([66.4, 0]).center([0, 18.2]).scale(1300).translate(PR_ANCHOR);
 const prPath = geoPath(prProjection);
@@ -88,6 +182,17 @@ for (const f of states.features) {
     zones: entries.map((e) => e.zoneKey),
     split: entries.length > 1,
   });
+}
+
+// Two-tone fills for the states a zone boundary runs through.
+for (const shape of shapes) {
+  if (!shape.split || !shape.usps) continue;
+  const clip = splitClipPath(shape.usps, projection);
+  const b = SPLIT_BOUNDARY[shape.usps];
+  if (clip && b) {
+    shape.splitClip = clip;
+    shape.splitZone = b.minority;
+  }
 }
 
 // Coarse paths for the home-page teaser, keyed by FIPS.
@@ -142,5 +247,7 @@ const full = shapes.reduce((n, s) => n + s.d.length, 0);
 const liteBytes = shapes.reduce((n, s) => n + (s.dLite?.length ?? 0), 0);
 console.log(`us.json: ${shapes.length} state shapes, ${splitStates.length} split states, ${kb} KB`);
 console.log(`  detailed paths ${(full / 1024).toFixed(0)} KB -> lite paths ${(liteBytes / 1024).toFixed(0)} KB`);
+const twoTone = shapes.filter((x) => x.splitClip).length;
+console.log(`  two-tone split states: ${twoTone}/${shapes.filter((x) => x.split).length}`);
 if (skipped.length) console.log('skipped:', skipped.join(', '));
 for (const [k, v] of Object.entries(zoneStates)) console.log(`  ${k.padEnd(9)} ${v.length} entries`);

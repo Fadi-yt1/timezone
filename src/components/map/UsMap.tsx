@@ -44,6 +44,16 @@ export function UsMap({
         role="img"
         aria-label="Map of United States time zones by state"
       >
+        <defs>
+          {usShapes.map((s) =>
+            s.splitClip ? (
+              <clipPath key={`cp-${s.fips}`} id={`tzsplit-${s.fips}`}>
+                <path d={s.splitClip} />
+              </clipPath>
+            ) : null,
+          )}
+        </defs>
+
         <g>
           {usShapes.map((s) => (
             <path
@@ -58,6 +68,24 @@ export function UsMap({
               <title>{s.name}</title>
             </path>
           ))}
+        </g>
+
+        {/* A zone boundary runs through thirteen states; the far side of that
+            boundary is painted in its own zone colour over the base fill.
+            Not interactive, so the base path keeps handling hover. */}
+        <g className="pointer-events-none">
+          {usShapes.map((s) =>
+            s.splitClip && s.splitZone ? (
+              <path
+                key={`sp-${s.fips}`}
+                d={detail === 'lite' ? (s.dLite ?? s.d) : s.d}
+                fill={zoneColor(s.splitZone)}
+                stroke="rgb(var(--canvas))"
+                strokeWidth="1"
+                clipPath={`url(#tzsplit-${s.fips})`}
+              />
+            ) : null,
+          )}
         </g>
 
         {/* Both label sets ship in the HTML; the toolbar toggles which group shows,

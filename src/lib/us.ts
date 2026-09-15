@@ -18,6 +18,10 @@ export interface UsStateShape {
   mapZone: string;
   zones: string[];
   split: boolean;
+  /** Clip region covering the part of a split state in the second zone. */
+  splitClip?: string;
+  /** Zone key that region belongs to. */
+  splitZone?: string;
   cx?: number;
   cy?: number;
 }
