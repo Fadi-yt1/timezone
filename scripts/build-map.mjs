@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { feature } from 'topojson-client';
 import { geoEquirectangular, geoPath } from 'd3-geo';
+import { assignLabels, labelAnchor } from './label-anchors.mjs';
+
+const round1 = (n) => Math.round(n * 10) / 10;
 
 const OUT = path.join(process.cwd(), 'src/data');
 const W = 1000;
@@ -81,6 +84,8 @@ for (const f of countriesGeo.features) {
   if (!raw) continue;
   // Trim coordinate precision: 0.1px on a 1000px canvas is invisible but halves the payload.
   const d = raw.replace(/-?\d+\.\d+/g, (n) => String(Math.round(Number(n) * 10) / 10));
+  // Where a name could sit, and how much room it has there.
+  const anchor = labelAnchor(d);
   shapes.push({
     id: String(f.id ?? code),
     code,
@@ -88,8 +93,19 @@ for (const f of countriesGeo.features) {
     d,
     zone: primaryZoneFor(code),
     zoneCount: country.zones.length,
+    cx: round1(anchor.x),
+    cy: round1(anchor.y),
+    r: round1(anchor.r),
   });
 }
+
+assignLabels(shapes);
+const labelled = shapes.filter((s) => s.label);
+console.log(
+  `labels: ${labelled.filter((s) => s.label === 'name').length} names, ` +
+    `${labelled.filter((s) => s.label === 'code').length} codes, ` +
+    `${shapes.length - labelled.length} unlabelled`,
+);
 
 // City dots, projected with the same transform so they land on the coastline.
 const mapCities = cities

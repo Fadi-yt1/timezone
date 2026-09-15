@@ -11,9 +11,21 @@ interface Shape {
   d: string;
   zone: string;
   zoneCount: number;
+  /** Label anchor: the point furthest inside the country's main landmass. */
+  cx: number;
+  cy: number;
+  /** How much room there is at that point — the inscribed circle's radius. */
+  r: number;
+  /** What the build decided fits here, if anything. */
+  label: 'name' | 'code' | null;
 }
 
 const shapes = world.shapes as Shape[];
+
+// Which countries carry a label, and whether it is the full name or the code,
+// is settled at build time: it depends only on the geometry, so there is
+// nothing for the browser to measure or lay out.
+const labels = shapes.filter((s) => s.label);
 const mapCities = world.cities as {
   name: string; zone: string; country: string | null;
   x: number; y: number; population: number | null; primary: boolean;
@@ -99,6 +111,32 @@ export function WorldMap({
           d={nightPath(width, height, now)}
           className="night-veil pointer-events-none"
         />
+
+        {/* Country names, over the veil so the night side stays readable. A
+            dark halo behind white text keeps them legible against every hour
+            colour, from midnight indigo through to midday amber. */}
+        <g
+          className="pointer-events-none select-none"
+          textAnchor="middle"
+          fontWeight={600}
+          fill="#ffffff"
+          stroke="rgba(6,10,20,0.62)"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+          style={{ paintOrder: 'stroke' }}
+        >
+          {labels.map((s) => (
+            <text
+              key={`label-${s.id}`}
+              x={s.cx}
+              y={s.cy}
+              fontSize={s.label === 'name' ? 7 : 6}
+              dominantBaseline="central"
+            >
+              {s.label === 'name' ? s.name : s.code}
+            </text>
+          ))}
+        </g>
 
         {cityDots.length > 0 && (
           <g className="pointer-events-none">

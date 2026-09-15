@@ -11,3 +11,6 @@ node tests/time.test.mjs
 
 # Guard the US map's two-tone split boundaries against cities of known zone.
 node scripts/verify-splits.mjs
+
+# Guard the world map's country labels: on the right country, not overlapping.
+node scripts/verify-labels.mjs
