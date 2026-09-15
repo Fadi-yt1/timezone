@@ -76,7 +76,29 @@ npm run build                                 # production build
 
 Next.js App Router with React server components, TypeScript, Tailwind CSS. No date library.
 Country paths are projected to SVG at build time with d3-geo and rendered server-side, so the
-map's ~180 KB of geometry stays in the HTML instead of the JavaScript bundle — first load is
-around 110 KB.
+map's geometry stays in the HTML instead of the JavaScript bundle — first load is around
+110 KB. The home page uses a simplified US geometry (42 KB rather than 154 KB) since it shows
+the map at half size.
 
-Deployed on Netlify via `@netlify/plugin-nextjs`.
+## Deploying
+
+The project builds two ways.
+
+**GitHub Pages** (what `.github/workflows/pages.yml` publishes):
+
+```bash
+npm run build:pages   # static export into out/
+```
+
+Pages serves files only, so this build pre-renders all 637 pages, drops the `/api/v1` route
+handlers, and resolves search against a prebuilt index in the browser instead of an endpoint.
+Clock components correct themselves on mount, so live times are right even though the HTML is
+generated ahead of time. The workflow rebuilds daily to keep baked-in DST dates current.
+
+**A Node host** (Netlify config is included):
+
+```bash
+npm run build && npm start
+```
+
+This keeps server rendering and the live JSON API at `/api/v1`.
