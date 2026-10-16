@@ -86,7 +86,7 @@ export function WorldMap({
           <line x1="0" y1={height / 2} x2={width} y2={height / 2} strokeWidth="0.8" />
         </g>
 
-        <g id="world-map-shapes">
+        <g id="world-map-shapes" className="map-relief">
           {shapes.map((s) => {
             const p = zonedParts(s.zone, now);
             return (

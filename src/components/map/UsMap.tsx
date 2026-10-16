@@ -47,7 +47,7 @@ export function UsMap({
         role="img"
         aria-label="Map of United States time zones by state"
       >
-        <g>
+        <g className="map-relief">
           {usShapes.map((s) =>
             s.parts ? (
               // A zone boundary crosses this state. Fill the whole state in the
