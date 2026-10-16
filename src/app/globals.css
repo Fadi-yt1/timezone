@@ -45,6 +45,28 @@
   --glass-raised-a: 0.1;
 
   /*
+   * Depth.
+   *
+   * One shadow reads as a sticker; a real object casts several at once. These
+   * are a contact shadow tight under the edge, a mid shadow for the body, and
+   * a wide ambient one. Stacked, they give a panel a position in space rather
+   * than just an outline.
+   */
+  --d-contact: 0 1px 2px -1px rgb(var(--shadow) / 0.5);
+  --d-mid: 0 6px 14px -6px rgb(var(--shadow) / 0.5);
+  --d-ambient: 0 22px 48px -22px rgb(var(--shadow) / 0.6);
+
+  /*
+   * Bevel: the edge thickness. Light comes from above, so the top edge catches
+   * it and the bottom edge falls into shadow. Both are one pixel, and together
+   * they are most of what separates a pane of glass from a flat rectangle.
+   */
+  --bevel-lit: inset 0 1px 0 0 rgb(255 255 255 / 0.2);
+  --bevel-dark: inset 0 -1px 0 0 rgb(var(--shadow) / 0.35);
+  /* The sheen running across the face, brightest at the top-left corner. */
+  --sheen: linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 42%);
+
+  /*
    * The wash the glass refracts. Without something behind them, translucent
    * panels over a flat colour just look like flat panels.
    */
@@ -81,6 +103,16 @@
   --glass-sat: 170%;
   --glass-shadow-a: 0.1;
   --glass-raised-a: 0.82;
+
+  /* Lighter surfaces need far softer shadows — the same alphas that read as
+     depth on a dark canvas read as dirt on a white one. */
+  --d-contact: 0 1px 2px -1px rgb(var(--shadow) / 0.1);
+  --d-mid: 0 6px 14px -8px rgb(var(--shadow) / 0.14);
+  --d-ambient: 0 22px 48px -24px rgb(var(--shadow) / 0.18);
+
+  --bevel-lit: inset 0 1px 0 0 rgb(255 255 255 / 0.9);
+  --bevel-dark: inset 0 -1px 0 0 rgb(var(--shadow) / 0.08);
+  --sheen: linear-gradient(135deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 46%);
 
   --wash-1: 96 120 226;
   --wash-2: 236 160 48;
@@ -132,12 +164,18 @@ body {
   .card {
     @apply relative rounded-xl2;
     background-color: rgb(var(--glass-tint) / var(--glass-a));
+    /* Sheen as a background layer, not a pseudo-element: a positioned overlay
+       would paint above the card's own text and veil it. */
+    background-image: var(--sheen);
     border: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
     box-shadow:
-      inset 0 1px 0 0 rgb(var(--glass-edge) / 0.14),
-      0 10px 30px -14px rgb(var(--shadow) / var(--glass-shadow-a));
+      var(--bevel-lit),
+      var(--bevel-dark),
+      var(--d-contact),
+      var(--d-mid),
+      var(--d-ambient);
   }
 
   /*
@@ -149,6 +187,9 @@ body {
   .card-lite {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    /* Shadows and bevels are near-free next to a compositing pass, so these
+       keep the full depth treatment and only lose the blur. */
+    box-shadow: var(--bevel-lit), var(--bevel-dark), var(--d-contact), var(--d-mid);
   }
 
   /* Menus and popovers: same material, opaque enough to cover what is under it. */
@@ -156,15 +197,27 @@ body {
     background-color: rgb(var(--glass-tint) / var(--glass-raised-a));
   }
 
+  /* Hovering lifts the panel toward the viewer: it rises a couple of pixels and
+     its shadows spread, which is what the eye reads as "closer". Transform
+     only — animating offsets would relayout the whole grid. */
   .card-hover {
-    @apply transition-[background-color,border-color,box-shadow] duration-200;
+    @apply transition-[background-color,border-color,box-shadow,transform] duration-200;
+    will-change: transform;
   }
   .card-hover:hover {
     background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.045));
     border-color: rgb(var(--accent) / 0.4);
+    transform: translateY(-2px);
     box-shadow:
-      inset 0 1px 0 0 rgb(var(--glass-edge) / 0.2),
-      0 14px 36px -14px rgb(var(--shadow) / var(--glass-shadow-a));
+      var(--bevel-lit),
+      var(--bevel-dark),
+      var(--d-contact),
+      0 10px 20px -8px rgb(var(--shadow) / 0.5),
+      0 30px 60px -24px rgb(var(--shadow) / 0.6);
+  }
+  .card-hover:active {
+    transform: translateY(0);
+    transition-duration: 60ms;
   }
 
   /*
@@ -177,7 +230,11 @@ body {
     border-bottom: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
     -webkit-backdrop-filter: blur(26px) saturate(180%);
     backdrop-filter: blur(26px) saturate(180%);
-    box-shadow: inset 0 -1px 0 0 rgb(var(--glass-edge) / 0.06);
+    /* The header floats over the page, so it casts downward onto it. */
+    box-shadow:
+      var(--bevel-lit),
+      0 1px 2px 0 rgb(var(--shadow) / 0.2),
+      0 10px 28px -14px rgb(var(--shadow) / 0.45);
   }
 
   /*
@@ -189,8 +246,10 @@ body {
   .glass-band {
     background-color: rgb(var(--glass-tint) / calc(var(--glass-a) * 0.7));
     border-color: rgb(var(--glass-edge) / var(--glass-edge-a));
+    background-image: var(--sheen);
     -webkit-backdrop-filter: blur(14px) saturate(var(--glass-sat));
     backdrop-filter: blur(14px) saturate(var(--glass-sat));
+    box-shadow: var(--bevel-lit), 0 1px 0 0 rgb(var(--shadow) / 0.12);
   }
 
   /* Footer and the mobile menu: full-width sheets of the same material. */
@@ -230,15 +289,28 @@ body {
            font-semibold text-ink transition-all duration-200 focus-visible:outline-none
            focus-visible:ring-2 focus-visible:ring-accent/60 disabled:opacity-40;
     background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.04));
+    background-image: var(--sheen);
     border: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
     -webkit-backdrop-filter: blur(10px) saturate(var(--glass-sat));
     backdrop-filter: blur(10px) saturate(var(--glass-sat));
-    box-shadow: inset 0 1px 0 0 rgb(var(--glass-edge) / 0.16);
+    box-shadow: var(--bevel-lit), var(--bevel-dark), var(--d-contact), var(--d-mid);
   }
   .btn:hover {
     background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.1));
     border-color: rgb(var(--accent) / 0.5);
     color: rgb(var(--accent));
+    transform: translateY(-1px);
+    box-shadow: var(--bevel-lit), var(--bevel-dark), var(--d-contact),
+      0 8px 18px -6px rgb(var(--shadow) / 0.45);
+  }
+  /* Pressing pushes it into the page: it drops flush and the bevel inverts,
+     so the lit edge moves to the bottom as it would on a real key. */
+  .btn:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 2px 5px -1px rgb(var(--shadow) / 0.4),
+      inset 0 -1px 0 0 rgb(255 255 255 / 0.1);
+    transition-duration: 60ms;
   }
 
   /* The one solid element on the page: a call to action has to out-weigh the
@@ -246,10 +318,15 @@ body {
   .btn-primary {
     @apply text-canvas;
     background-color: rgb(var(--accent));
+    /* Solid, but still lit from above — a flat fill next to bevelled glass
+       looks like a hole in the page. */
+    background-image: linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0) 55%);
     border-color: transparent;
     box-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.25),
-      0 8px 22px -10px rgb(var(--accent) / 0.65);
+      inset 0 1px 0 0 rgb(255 255 255 / 0.4),
+      inset 0 -1px 0 0 rgb(var(--shadow) / 0.2),
+      0 2px 4px -1px rgb(var(--accent) / 0.4),
+      0 10px 26px -10px rgb(var(--accent) / 0.65);
   }
   .btn-primary:hover {
     background-color: rgb(var(--accent));
@@ -264,7 +341,11 @@ body {
            transition-colors focus:outline-none focus:ring-2 focus:ring-accent/25;
     background-color: rgb(var(--canvas) / 0.4);
     border: 1px solid rgb(var(--glass-edge) / calc(var(--glass-edge-a) * 0.8));
-    box-shadow: inset 0 1px 3px 0 rgb(var(--shadow) / 0.18);
+    /* The bevel runs the other way on a recess: the top edge is in shadow
+       because the surface above it is now the thing casting one. */
+    box-shadow:
+      inset 0 2px 5px -1px rgb(var(--shadow) / 0.3),
+      inset 0 -1px 0 0 rgb(var(--glass-edge) / 0.14);
   }
   .field:focus {
     border-color: rgb(var(--accent) / 0.6);
@@ -342,6 +423,9 @@ body {
   .print-map * {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    transform: none !important;
   }
 
   .print-map [data-print-hide] {
@@ -352,6 +436,14 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* The lift and press are motion. The shadow and bevel changes are not, so
+     they stay — the depth cues survive, only the movement goes. */
+  .card-hover:hover,
+  .card-hover:active,
+  .btn:hover,
+  .btn:active {
+    transform: none;
   }
   *,
   *::before,
