@@ -55,7 +55,7 @@ export default function TimeZonesPage() {
                   const off = offsetMinutes(z.zone, now);
                   return (
                     <li key={z.zone}>
-                      <Link href={`/time-zones/${z.zone}`} className="card card-hover flex items-center justify-between gap-3 p-3.5">
+                      <Link href={`/time-zones/${z.zone}`} className="card card-lite card-hover flex items-center justify-between gap-3 p-3.5">
                         <span className="min-w-0">
                           <span className="block truncate text-sm font-medium text-ink">{z.label}</span>
                           <span className="block truncate text-[11px] text-faint">
@@ -89,7 +89,7 @@ export default function TimeZonesPage() {
           <ul className="grid gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {utcZones.map((z) => (
               <li key={z.zone}>
-                <Link href={`/time-zones/${z.zone}`} className="card card-hover flex items-center justify-between gap-2 p-3">
+                <Link href={`/time-zones/${z.zone}`} className="card card-lite card-hover flex items-center justify-between gap-2 p-3">
                   <span className="truncate text-sm font-medium">{z.zone}</span>
                   <span className="clock shrink-0 text-xs text-accent">
                     {formatUtcLabel(z.stdOffset)}

@@ -29,7 +29,7 @@ export default function MapPage() {
 
       <div className="shell py-8">
         <div className="card overflow-hidden">
-          <div className="relative aspect-[2/1] w-full bg-canvas">
+          <div className="relative aspect-[2/1] w-full glass-map">
             <WorldMap />
           </div>
           <div className="border-t border-line px-4 py-3.5 sm:px-5">

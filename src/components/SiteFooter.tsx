@@ -32,7 +32,7 @@ const groups = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-line bg-surface">
+    <footer className="glass-sheet mt-20 border-t">
       <div className="shell grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">

@@ -31,7 +31,7 @@ export default function CountriesPage() {
           <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {multi.slice(0, 12).map((c) => (
               <li key={c.code}>
-                <Link href={`/countries/${c.code.toLowerCase()}`} className="card card-hover flex items-center gap-3 p-4">
+                <Link href={`/countries/${c.code.toLowerCase()}`} className="card card-lite card-hover flex items-center gap-3 p-4">
                   <span aria-hidden="true" className="text-2xl">{c.flag}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-medium text-ink">{c.name}</span>
@@ -52,7 +52,7 @@ export default function CountriesPage() {
                 <li key={c.code}>
                   <Link
                     href={`/countries/${c.code.toLowerCase()}`}
-                    className="card card-hover flex items-center justify-between gap-3 p-3.5"
+                    className="card card-lite card-hover flex items-center justify-between gap-3 p-3.5"
                   >
                     <span className="flex min-w-0 items-center gap-2.5">
                       <span aria-hidden="true">{c.flag}</span>

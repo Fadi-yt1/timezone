@@ -30,7 +30,7 @@ export default function OffsetIndexPage() {
             const clock = new Date(now + offsetMinutes(g.zones[0].zone, now) * 60000);
             return (
               <li key={g.offset}>
-                <Link href={offsetHref(g.offset)} className="card card-hover block p-4">
+                <Link href={offsetHref(g.offset)} className="card card-lite card-hover block p-4">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="clock text-lg font-bold text-accent">{formatUtcLabel(g.offset)}</span>
                     <span className="clock text-lg font-semibold">

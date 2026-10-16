@@ -13,7 +13,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-canvas/85 backdrop-blur-md">
+    <header className="glass-bar sticky top-0 z-30">
       <div className="shell flex h-16 items-center gap-4">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${site.name} home`}>
           <Logo className="h-7 w-7" />
@@ -64,7 +64,7 @@ export function SiteHeader() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-line bg-surface lg:hidden">
+        <div className="glass-sheet border-t lg:hidden">
           <div className="shell space-y-3 py-4">
             <SearchBox placeholder="Search cities or zones…" />
             <nav className="grid gap-1" aria-label="Mobile">

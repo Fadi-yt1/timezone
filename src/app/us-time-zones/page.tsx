@@ -61,7 +61,7 @@ export default function UsTimeZonesPage() {
           <div className="card print-map overflow-hidden">
             <UsToolbar states={usStateList} />
             <MapCollapse>
-              <div className="relative aspect-[16/10] w-full bg-canvas">
+              <div className="relative aspect-[16/10] w-full glass-map">
                 {/* Same geometry as the home page. At the size this renders,
                     the detailed coastlines read as noise rather than detail,
                     and cost about 122 KB of path data. */}

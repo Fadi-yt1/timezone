@@ -47,7 +47,7 @@ export function UsZonesHome({ initialNow }: { initialNow: number }) {
         <div className="card print-map mt-5 overflow-hidden">
           <UsToolbar states={usStateList} />
           <MapCollapse>
-            <div className="relative aspect-[16/10] w-full bg-canvas">
+            <div className="relative aspect-[16/10] w-full glass-map">
               <UsMap initialNow={initialNow} detail="lite" />
             </div>
           </MapCollapse>

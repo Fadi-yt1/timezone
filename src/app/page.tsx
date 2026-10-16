@@ -47,7 +47,7 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="border-b border-line bg-surface">
+      <section className="glass-band border-b">
         <div className="shell py-12 sm:py-16">
           <div className="max-w-2xl">
             <p className="label mb-3">Live · {listedZones.length} time zones · {countries.length} countries</p>
@@ -69,7 +69,7 @@ export default function HomePage() {
 
       <section className="shell py-10">
         <div className="card overflow-hidden">
-          <div className="relative aspect-[2/1] w-full bg-canvas">
+          <div className="relative aspect-[2/1] w-full glass-map">
             <WorldMap />
           </div>
           <div className="border-t border-line px-4 py-3.5 sm:px-5">

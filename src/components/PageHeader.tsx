@@ -10,7 +10,7 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <header className="border-b border-line bg-surface">
+    <header className="glass-band border-b">
       <div className="shell py-10 sm:py-12">
         {eyebrow && <p className="label mb-2.5">{eyebrow}</p>}
         <h1 className="display text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>

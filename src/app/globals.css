@@ -9,13 +9,13 @@
  * monospace so clock digits never shift width as they tick.
  */
 :root {
-  --canvas: 6 10 20;
+  --canvas: 9 13 28;
   --surface: 12 18 32;
   --raised: 20 28 46;
   --line: 33 44 68;
   --ink: 233 239 250;
   --muted: 150 164 190;
-  --faint: 104 119 146;
+  --faint: 132 147 175;
   --accent: 245 173 66;
   --accent-soft: 120 84 30;
   --night: 30 41 82;
@@ -24,6 +24,34 @@
   --veil: 2 5 16;
   --veil-opacity: 0.46;
   --shadow: 0 0 0;
+
+  /*
+   * Glass.
+   *
+   * A panel is a tint laid over whatever is behind it, plus a blur that pulls
+   * that backdrop through. On a dark canvas the tint is white at very low
+   * alpha: enough to lift the panel off the page, not enough to grey it out.
+   * Saturation is pushed past 100% because blurring washes colour out, and the
+   * ambient wash below is the thing worth keeping.
+   */
+  --glass-tint: 255 255 255;
+  --glass-a: 0.075;
+  --glass-edge: 255 255 255;
+  --glass-edge-a: 0.17;
+  --glass-blur: 18px;
+  --glass-sat: 150%;
+  --glass-shadow-a: 0.5;
+  /* Raised: menus and popovers, which need to read as solid over a panel. */
+  --glass-raised-a: 0.1;
+
+  /*
+   * The wash the glass refracts. Without something behind them, translucent
+   * panels over a flat colour just look like flat panels.
+   */
+  --wash-1: 86 108 214;
+  --wash-2: 245 173 66;
+  --wash-3: 54 148 150;
+  --wash-a: 0.42;
   color-scheme: dark;
 }
 
@@ -34,7 +62,7 @@
   --line: 219 227 238;
   --ink: 15 23 42;
   --muted: 82 96 120;
-  --faint: 124 138 162;
+  --faint: 98 111 134;
   --accent: 181 106 8;
   --accent-soft: 253 235 205;
   --night: 60 74 130;
@@ -42,6 +70,22 @@
   --veil: 28 40 78;
   --veil-opacity: 0.2;
   --shadow: 15 23 42;
+
+  /* On a light canvas the tint has to be far more opaque, or body text ends up
+     sitting on whatever colour happens to be behind the panel. */
+  --glass-tint: 255 255 255;
+  --glass-a: 0.66;
+  --glass-edge: 255 255 255;
+  --glass-edge-a: 0.95;
+  --glass-blur: 16px;
+  --glass-sat: 170%;
+  --glass-shadow-a: 0.1;
+  --glass-raised-a: 0.82;
+
+  --wash-1: 96 120 226;
+  --wash-2: 236 160 48;
+  --wash-3: 56 156 158;
+  --wash-a: 0.34;
   color-scheme: light;
 }
 
@@ -54,7 +98,16 @@ html {
 }
 
 body {
-  background: rgb(var(--canvas));
+  /* Fixed, so the wash stays put while the page scrolls past it — a backdrop
+     that scrolled with the content would read as part of the content. */
+  background-color: rgb(var(--canvas));
+  background-image:
+    radial-gradient(78vw 70vh at 4% -12%, rgb(var(--wash-1) / var(--wash-a)), transparent 68%),
+    radial-gradient(68vw 62vh at 98% -4%, rgb(var(--wash-2) / var(--wash-a)), transparent 70%),
+    radial-gradient(72vw 68vh at 82% 104%, rgb(var(--wash-3) / var(--wash-a)), transparent 68%),
+    radial-gradient(60vw 58vh at 16% 92%, rgb(var(--wash-2) / calc(var(--wash-a) * 0.6)), transparent 70%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: rgb(var(--ink));
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -68,12 +121,93 @@ body {
     @apply mx-auto w-full max-w-shell px-5 sm:px-6 lg:px-8;
   }
 
+  /*
+   * The glass panel, and the whole look in one rule.
+   *
+   * Four things stacked, in paint order: the blurred backdrop, a tint over it,
+   * a hairline edge, and a one-pixel inset highlight along the top. The
+   * highlight is what sells it — real glass catches light on its top edge, and
+   * without it a translucent box just looks faded.
+   */
   .card {
-    @apply rounded-xl2 border border-line bg-surface;
+    @apply relative rounded-xl2;
+    background-color: rgb(var(--glass-tint) / var(--glass-a));
+    border: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    box-shadow:
+      inset 0 1px 0 0 rgb(var(--glass-edge) / 0.14),
+      0 10px 30px -14px rgb(var(--shadow) / var(--glass-shadow-a));
+  }
+
+  /*
+   * Dense grids — 247 country cards, 337 zone cards — opt out of the blur.
+   * Each backdrop-filter is its own compositing pass, and a few hundred of
+   * them on one page costs far more than the effect is worth at that size.
+   * The tint and edge stay, so they still read as the same material.
+   */
+  .card-lite {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Menus and popovers: same material, opaque enough to cover what is under it. */
+  .card-raised {
+    background-color: rgb(var(--glass-tint) / var(--glass-raised-a));
   }
 
   .card-hover {
-    @apply transition-colors duration-150 hover:border-accent/45 hover:bg-raised;
+    @apply transition-[background-color,border-color,box-shadow] duration-200;
+  }
+  .card-hover:hover {
+    background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.045));
+    border-color: rgb(var(--accent) / 0.4);
+    box-shadow:
+      inset 0 1px 0 0 rgb(var(--glass-edge) / 0.2),
+      0 14px 36px -14px rgb(var(--shadow) / var(--glass-shadow-a));
+  }
+
+  /*
+   * The sticky header. Blurred harder than a panel because content scrolls
+   * directly beneath it: at a panel's 18px the text underneath stays legible
+   * enough to fight with the nav.
+   */
+  .glass-bar {
+    background-color: rgb(var(--canvas) / 0.62);
+    border-bottom: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
+    -webkit-backdrop-filter: blur(26px) saturate(180%);
+    backdrop-filter: blur(26px) saturate(180%);
+    box-shadow: inset 0 -1px 0 0 rgb(var(--glass-edge) / 0.06);
+  }
+
+  /*
+   * Page-wide bands — the home hero, every page header. These sit directly on
+   * the wash, so they are the lightest tint on the site: enough to separate the
+   * band from the page, little enough that the colour behind still comes
+   * through. An opaque surface here flattened the whole top of every page.
+   */
+  .glass-band {
+    background-color: rgb(var(--glass-tint) / calc(var(--glass-a) * 0.7));
+    border-color: rgb(var(--glass-edge) / var(--glass-edge-a));
+    -webkit-backdrop-filter: blur(14px) saturate(var(--glass-sat));
+    backdrop-filter: blur(14px) saturate(var(--glass-sat));
+  }
+
+  /* Footer and the mobile menu: full-width sheets of the same material. */
+  .glass-sheet {
+    background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.02));
+    border-color: rgb(var(--glass-edge) / var(--glass-edge-a));
+    -webkit-backdrop-filter: blur(22px) saturate(var(--glass-sat));
+    backdrop-filter: blur(22px) saturate(var(--glass-sat));
+  }
+
+  /*
+   * Map surfaces. A map needs a settled backdrop to be read against, so this
+   * is far more opaque than a panel — but not fully, or the card it sits in
+   * stops looking like glass at exactly the place the eye rests longest.
+   */
+  .glass-map {
+    background-color: rgb(var(--canvas) / 0.55);
   }
 
   .label {
@@ -92,21 +226,49 @@ body {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line
-           bg-raised px-4 py-2.5 text-sm font-semibold text-ink transition-colors
-           hover:border-accent/50 hover:text-accent focus-visible:outline-none
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm
+           font-semibold text-ink transition-all duration-200 focus-visible:outline-none
            focus-visible:ring-2 focus-visible:ring-accent/60 disabled:opacity-40;
+    background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.04));
+    border: 1px solid rgb(var(--glass-edge) / var(--glass-edge-a));
+    -webkit-backdrop-filter: blur(10px) saturate(var(--glass-sat));
+    backdrop-filter: blur(10px) saturate(var(--glass-sat));
+    box-shadow: inset 0 1px 0 0 rgb(var(--glass-edge) / 0.16);
+  }
+  .btn:hover {
+    background-color: rgb(var(--glass-tint) / calc(var(--glass-a) + 0.1));
+    border-color: rgb(var(--accent) / 0.5);
+    color: rgb(var(--accent));
   }
 
+  /* The one solid element on the page: a call to action has to out-weigh the
+     glass around it, and more translucency cannot do that. */
   .btn-primary {
-    @apply border-transparent bg-accent text-canvas hover:bg-accent hover:text-canvas
-           hover:brightness-110;
+    @apply text-canvas;
+    background-color: rgb(var(--accent));
+    border-color: transparent;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.25),
+      0 8px 22px -10px rgb(var(--accent) / 0.65);
+  }
+  .btn-primary:hover {
+    background-color: rgb(var(--accent));
+    color: rgb(var(--canvas));
+    filter: brightness(1.08);
   }
 
+  /* Inputs read as recessed rather than raised: the tint sits darker than the
+     panel they are on, and the inset shadow presses them in. */
   .field {
-    @apply w-full rounded-lg border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink
-           placeholder:text-faint focus:border-accent/60 focus:outline-none
-           focus:ring-2 focus:ring-accent/25;
+    @apply w-full rounded-lg px-3.5 py-2.5 text-sm text-ink placeholder:text-faint
+           transition-colors focus:outline-none focus:ring-2 focus:ring-accent/25;
+    background-color: rgb(var(--canvas) / 0.4);
+    border: 1px solid rgb(var(--glass-edge) / calc(var(--glass-edge-a) * 0.8));
+    box-shadow: inset 0 1px 3px 0 rgb(var(--shadow) / 0.18);
+  }
+  .field:focus {
+    border-color: rgb(var(--accent) / 0.6);
+    background-color: rgb(var(--canvas) / 0.55);
   }
 
   .link {
@@ -172,6 +334,14 @@ body {
   .print-map {
     border: 0;
     background: #fff !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  .print-map * {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 
   .print-map [data-print-hide] {
