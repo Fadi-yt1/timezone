@@ -12,16 +12,46 @@ const zoneTips: Record<string, ZoneTip> = Object.fromEntries(
   Object.entries(allUsZones).map(([k, z]) => [k, { short: z.short, zone: z.zone, color: zoneColor(k) }]),
 );
 
-// The northeast is far too crowded for centroid labels, so these nine run out
-// to a column on the right on a leader line — same treatment as the printables.
-const LEADER: Record<string, number> = {
-  VT: 96, NH: 118, MA: 140, RI: 162, CT: 184, NJ: 208, DE: 230, MD: 252, DC: 274,
+// The northeast is far too crowded for centroid labels, so these states are set
+// beside the map and tied back to it with a leader line ending in a dot.
+//
+// They are placed per state rather than in one aligned column: kept close to
+// the coastline they belong to, and split into the two clusters the geography
+// already suggests — New England above, the mid-Atlantic below. A single column
+// far to the right needs much longer lines, which cross each other and push the
+// map itself into a corner of the frame.
+interface Leader {
+  x: number;
+  y: number;
+  /** 'middle' for a label set above its state, 'start' for one set beside it. */
+  anchor: 'start' | 'middle';
+}
+
+const LEADER: Record<string, Leader> = {
+  // Vermont is the one with clear air directly above it, so it goes there and
+  // drops a line straight down, as on a printed atlas.
+  VT: { x: 884, y: 44, anchor: 'middle' },
+  NH: { x: 954, y: 112, anchor: 'start' },
+  MA: { x: 954, y: 134, anchor: 'start' },
+  RI: { x: 954, y: 156, anchor: 'start' },
+  CT: { x: 954, y: 178, anchor: 'start' },
+  NJ: { x: 934, y: 208, anchor: 'start' },
+  DE: { x: 934, y: 230, anchor: 'start' },
+  MD: { x: 934, y: 252, anchor: 'start' },
+  DC: { x: 934, y: 274, anchor: 'start' },
   // Puerto Rico sits low and to the right, as its own inset.
-  PR: 527,
+  PR: { x: 905, y: 530, anchor: 'start' },
 };
-const LEADER_X = 990;
-/** Extra canvas to the right of the map for the leader-label column. */
-const GUTTER = 165;
+
+/** Where a leader line stops so it reaches its label without touching it. */
+function leaderEnd(l: Leader) {
+  return l.anchor === 'middle'
+    ? { x: l.x, y: l.y + 5 }
+    : { x: l.x - 5, y: l.y - 4 };
+}
+
+/** Extra canvas to the right of the map for the leader labels. */
+const GUTTER = 110;
 
 /**
  * US time zone map, Albers USA projection with Alaska and Hawaii as insets.
@@ -126,8 +156,8 @@ export function UsMap({
         <g className="pointer-events-none" data-labels="abbr" fill="rgb(var(--ink))">
           {usShapes.map((s) => {
             if (s.cx === undefined || !s.usps) return null;
-            const ly = LEADER[s.usps];
-            return ly === undefined ? (
+            const l = LEADER[s.usps];
+            return l === undefined ? (
               <text
                 key={`a-${s.fips}`}
                 x={s.cx}
@@ -140,7 +170,7 @@ export function UsMap({
                 {s.usps}
               </text>
             ) : (
-              <text key={`al-${s.fips}`} x={LEADER_X} y={ly} fontSize="12" fontWeight="700" textAnchor="start">
+              <text key={`al-${s.fips}`} x={l.x} y={l.y} fontSize="12" fontWeight="700" textAnchor={l.anchor}>
                 {s.usps}
               </text>
             );
@@ -155,8 +185,8 @@ export function UsMap({
         >
           {usShapes.map((s) => {
             if (s.cx === undefined || !s.usps) return null;
-            const ly = LEADER[s.usps];
-            return ly === undefined ? (
+            const l = LEADER[s.usps];
+            return l === undefined ? (
               <text
                 key={`n-${s.fips}`}
                 x={s.cx}
@@ -169,28 +199,38 @@ export function UsMap({
                 {s.name}
               </text>
             ) : (
-              <text key={`nl-${s.fips}`} x={LEADER_X} y={ly} fontSize="10.5" fontWeight="700" textAnchor="start">
+              <text key={`nl-${s.fips}`} x={l.x} y={l.y} fontSize="10.5" fontWeight="700" textAnchor={l.anchor}>
                 {s.name}
               </text>
             );
           })}
         </g>
 
-        {/* The leader lines are shared by both naming modes. */}
+        {/* Leader lines, shared by both naming modes. Each ends in a dot on the
+            state it names: without it the line just points into a patch of
+            colour and leaves which state ambiguous among neighbours this
+            small. */}
         <g className="pointer-events-none" data-labels="leaderlines">
-          {usShapes.map((s) =>
-            s.cx !== undefined && s.usps && LEADER[s.usps] !== undefined ? (
-              <line
-                key={`ll-${s.fips}`}
-                x1={s.cx}
-                y1={s.cy}
-                x2={LEADER_X - 6}
-                y2={LEADER[s.usps] - 4}
-                stroke="rgb(var(--muted))"
-                strokeWidth="0.8"
-              />
-            ) : null,
-          )}
+          {usShapes.map((s) => {
+            if (s.cx === undefined || !s.usps) return null;
+            const l = LEADER[s.usps];
+            if (l === undefined) return null;
+            const end = leaderEnd(l);
+            return (
+              <g key={`ll-${s.fips}`}>
+                <line
+                  x1={s.cx}
+                  y1={s.cy}
+                  x2={end.x}
+                  y2={end.y}
+                  stroke="rgb(var(--ink))"
+                  strokeWidth="0.7"
+                  opacity="0.55"
+                />
+                <circle cx={s.cx} cy={s.cy} r="1.7" fill="rgb(var(--ink))" opacity="0.75" />
+              </g>
+            );
+          })}
         </g>
       </svg>
     </UsMapLayer>

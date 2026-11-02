@@ -20,12 +20,26 @@ const ZONES = [
 ];
 const byKey = Object.fromEntries(ZONES.map((z) => [z.key, z]));
 
-// The northeast is too crowded for centroid labels; these get a leader line
-// out to a column on the right.
+// The northeast is too crowded for centroid labels, so these are set beside the
+// map and tied back to it with a leader line ending in a dot. Coordinates match
+// the on-screen map's, which shares this projection, so the printed sheet and
+// the page agree: two clusters close to the coast rather than one distant
+// column, and Vermont dropped from the clear air above it.
 const LEADER = {
-  VT: 96, NH: 118, MA: 140, RI: 162, CT: 184, NJ: 208, DE: 230, MD: 252, DC: 274,
+  VT: { x: 884, y: 44, anchor: 'middle' },
+  NH: { x: 954, y: 112, anchor: 'start' },
+  MA: { x: 954, y: 134, anchor: 'start' },
+  RI: { x: 954, y: 156, anchor: 'start' },
+  CT: { x: 954, y: 178, anchor: 'start' },
+  NJ: { x: 934, y: 208, anchor: 'start' },
+  DE: { x: 934, y: 230, anchor: 'start' },
+  MD: { x: 934, y: 252, anchor: 'start' },
+  DC: { x: 934, y: 274, anchor: 'start' },
 };
-const LEADER_X = 944;
+
+/** Where a leader line stops so it reaches its label without touching it. */
+const leaderEnd = (l) =>
+  l.anchor === 'middle' ? { x: l.x, y: l.y + 5 } : { x: l.x - 5, y: l.y - 4 };
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -89,12 +103,14 @@ function buildSvg({ mode, title, subtitle }) {
     .map((s) => {
       const dark = mode === 'color' || mode === 'grey';
       const fill = mode === 'blank' ? '#444444' : dark && mode === 'grey' ? '#111111' : '#11182a';
-      if (LEADER[s.usps] !== undefined) {
-        const ly = LEADER[s.usps];
+      const lead = LEADER[s.usps];
+      if (lead !== undefined) {
+        const end = leaderEnd(lead);
         return (
           `<g>` +
-          `<line x1="${s.cx}" y1="${s.cy}" x2="${LEADER_X - 5}" y2="${ly - 4}" stroke="#555555" stroke-width="0.7"/>` +
-          `<text x="${LEADER_X}" y="${ly}" font-size="12" font-weight="700" fill="${fill}" text-anchor="start">${s.usps}</text>` +
+          `<line x1="${s.cx}" y1="${s.cy}" x2="${end.x}" y2="${end.y}" stroke="#555555" stroke-width="0.7"/>` +
+          `<circle cx="${s.cx}" cy="${s.cy}" r="1.7" fill="#555555"/>` +
+          `<text x="${lead.x}" y="${lead.y}" font-size="12" font-weight="700" fill="${fill}" text-anchor="${lead.anchor}">${s.usps}</text>` +
           `</g>`
         );
       }
