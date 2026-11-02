@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useNow } from '@/components/LiveClock';
 import { useUsSettings } from '@/components/us/UsSettings';
 import { formatClock, formatDate } from '@/lib/format';
-import { abbreviation, formatUtcLabel, offsetMinutes } from '@/lib/time';
 
 /**
- * The reader's own local time, shown beside the four US zones.
+ * The reader's own local time, shown beside the four US zones, in the same
+ * shape as those four: a heading, the clock, the date, and nothing else. The
+ * zone it resolved to is kept in the title attribute rather than printed, so
+ * the card stays legible at the width five across leaves it.
  *
  * The zone comes from the browser — Intl.DateTimeFormat().resolvedOptions() —
  * not from an IP lookup. On a statically exported site there is no server to
@@ -39,22 +41,12 @@ export function LocalZoneClock({ initialNow }: { initialNow: number }) {
   let clock = '--:--';
   let suffix: string | null = null;
   let date = '';
-  let detail = 'Detecting…';
-  let abbr: string | null = null;
 
   if (ready) {
     const full = formatClock(zone, now, { seconds: false, hour12 });
     const cut = full.lastIndexOf(' ');
     [clock, suffix] = hour12 && cut > 0 ? [full.slice(0, cut), full.slice(cut + 1)] : [full, null];
     date = formatDate(zone, now, { style: 'caps' });
-    // The IANA name is the honest label, but "America/New_York" reads badly on
-    // a card, so show the city and keep the full name in the tooltip.
-    const city = zone.split('/').pop()?.replace(/_/g, ' ') ?? zone;
-    detail = `${city} · ${formatUtcLabel(offsetMinutes(zone, now))}`;
-    // Many zones have no real abbreviation and Intl hands back "GMT+5", which
-    // only repeats the offset printed next to it. Show the abbreviation when it
-    // is a name (PKT, BST, MST) and drop it when it is just the offset again.
-    abbr = /^GMT/.test(abbreviation(zone, now)) ? null : abbreviation(zone, now);
   }
 
   return (
@@ -69,15 +61,6 @@ export function LocalZoneClock({ initialNow }: { initialNow: number }) {
         </p>
         <p className="clock mt-2.5 text-xs font-semibold tracking-wide text-faint">
           {ready ? date : ' '}
-        </p>
-        <p className="mt-1 truncate text-[11px] text-muted">
-          {ready && abbr ? (
-            <>
-              <span className="clock">{abbr}</span> · {detail}
-            </>
-          ) : (
-            detail
-          )}
         </p>
       </div>
     </div>
