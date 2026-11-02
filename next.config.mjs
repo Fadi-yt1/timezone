@@ -4,10 +4,21 @@
  *   - GITHUB_PAGES=true: a fully static export for GitHub Pages
  *
  * Pages serves static files only, so the export drops the API routes and
- * pre-renders every page. Project sites are served from /<repo>, hence basePath.
+ * pre-renders every page. A project site is served from /<repo>, hence
+ * basePath; a user site (<user>.github.io) is served from the root.
  */
 const isPages = process.env.GITHUB_PAGES === 'true';
-const basePath = isPages ? (process.env.PAGES_BASE_PATH ?? '/timezone') : '';
+
+/**
+ * actions/configure-pages reports a user site's base path as "/", which Next
+ * rejects: basePath must be empty, or start with a slash and not end with one.
+ * Normalising here means switching a project site to a user site is a rename on
+ * GitHub and nothing else — the workflow passes whatever Pages reports and this
+ * turns it into something Next accepts.
+ */
+const normaliseBasePath = (raw) => (raw ?? '').replace(/\/+$/, '');
+
+const basePath = isPages ? normaliseBasePath(process.env.PAGES_BASE_PATH ?? '/timezone') : '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

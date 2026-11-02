@@ -5,7 +5,13 @@ export const site = {
     'An interactive world time zone map with live local times for every IANA zone, a ' +
     'time zone converter, a meeting planner that finds overlapping working hours, and ' +
     'daylight saving transition dates for 240+ countries.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fadi-yt1.github.io/timezone',
+  // Trailing slash stripped: every use concatenates a path straight onto this,
+  // and a user site's URL arrives from the workflow as "<origin>/", which would
+  // otherwise produce //map in canonical links and the sitemap.
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fadi-yt1.github.io/timezone').replace(
+    /\/+$/,
+    '',
+  ),
 } as const;
 
 export const nav = [
