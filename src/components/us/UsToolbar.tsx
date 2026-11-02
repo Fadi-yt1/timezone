@@ -12,7 +12,10 @@ const LABEL_OPTIONS: { value: LabelMode; label: string }[] = [
 
 /** Display controls sitting above the map: label mode, clock format, find a state, print. */
 export function UsToolbar({ states }: { states: UsStateRow[] }) {
-  const { hour12, setHour12, labelMode, setLabelMode, setFocused, mapHidden, setMapHidden } =
+  const {
+    hour12, setHour12, labelMode, setLabelMode, setFocused, mapHidden, setMapHidden,
+    showLocal, setShowLocal,
+  } =
     useUsSettings();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -116,6 +119,21 @@ export function UsToolbar({ states }: { states: UsStateRow[] }) {
           </ul>
         )}
       </div>
+
+      <button
+        type="button"
+        onClick={() => setShowLocal(!showLocal)}
+        aria-pressed={showLocal}
+        className="btn px-3 py-1.5 text-xs"
+        title="Show a card for the time zone this device is set to"
+      >
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3.2 1.9" strokeLinecap="round" strokeLinejoin="round" />
+          {!showLocal && <path d="M3 3l18 18" strokeLinecap="round" />}
+        </svg>
+        {showLocal ? 'Hide your time' : 'Your time'}
+      </button>
 
       <button
         type="button"

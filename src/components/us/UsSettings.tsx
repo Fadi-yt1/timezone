@@ -14,6 +14,9 @@ interface UsSettings {
   setFocused: (v: string | null) => void;
   mapHidden: boolean;
   setMapHidden: (v: boolean) => void;
+  /** Show a card for the reader's own time zone alongside the four US ones. */
+  showLocal: boolean;
+  setShowLocal: (v: boolean) => void;
 }
 
 const Ctx = createContext<UsSettings | null>(null);
@@ -26,6 +29,7 @@ export function UsSettingsProvider({ children }: { children: React.ReactNode }) 
   const [labelMode, setLabelMode] = useState<LabelMode>('abbr');
   const [focused, setFocused] = useState<string | null>(null);
   const [mapHidden, setMapHidden] = useState(false);
+  const [showLocal, setShowLocal] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -36,10 +40,12 @@ export function UsSettingsProvider({ children }: { children: React.ReactNode }) 
           hour12: boolean;
           labelMode: LabelMode;
           mapHidden: boolean;
+          showLocal: boolean;
         }>;
         if (typeof p.hour12 === 'boolean') setHour12(p.hour12);
         if (p.labelMode) setLabelMode(p.labelMode);
         if (typeof p.mapHidden === 'boolean') setMapHidden(p.mapHidden);
+        if (typeof p.showLocal === 'boolean') setShowLocal(p.showLocal);
       }
     } catch {
       /* no saved preference */
@@ -50,11 +56,14 @@ export function UsSettingsProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!loaded) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ hour12, labelMode, mapHidden }));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ hour12, labelMode, mapHidden, showLocal }),
+      );
     } catch {
       /* ignore */
     }
-  }, [hour12, labelMode, mapHidden, loaded]);
+  }, [hour12, labelMode, mapHidden, showLocal, loaded]);
 
   const value = useMemo(
     () => ({
@@ -66,8 +75,10 @@ export function UsSettingsProvider({ children }: { children: React.ReactNode }) 
       setFocused,
       mapHidden,
       setMapHidden,
+      showLocal,
+      setShowLocal,
     }),
-    [hour12, labelMode, focused, mapHidden],
+    [hour12, labelMode, focused, mapHidden, showLocal],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

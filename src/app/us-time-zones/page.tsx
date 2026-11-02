@@ -8,6 +8,7 @@ import {
 } from '@/lib/us';
 import { UsSettingsProvider } from '@/components/us/UsSettings';
 import { UsToolbar } from '@/components/us/UsToolbar';
+import { UsZoneStrip } from '@/components/us/UsZoneStrip';
 import { StateTimeGrid } from '@/components/us/StateTimeGrid';
 import { MapCollapse } from '@/components/us/MapCollapse';
 import { PrintableMaps } from '@/components/us/PrintableMaps';
@@ -38,23 +39,17 @@ export default function UsTimeZonesPage() {
 
       <UsSettingsProvider>
       <div className="shell py-8">
-        {/* Live strip of the four zones */}
-        <section
-          aria-label="Current time in each US zone"
-          className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {continentalZones.map((z) => (
-            <UsZoneClock
-              key={z.key}
-              zone={z.zone}
-              name={z.name}
-              short={z.short}
-              color={zoneColor(z.key)}
-              initialNow={now}
-              compact
-            />
-          ))}
-        </section>
+        {/* Live strip of the four zones, plus the reader's own if they want it */}
+        <UsZoneStrip
+          initialNow={now}
+          zones={continentalZones.map((z) => ({
+            key: z.key,
+            zone: z.zone,
+            name: z.name,
+            short: z.short,
+            color: zoneColor(z.key),
+          }))}
+        />
 
         {/* Map */}
         <section className="mt-8">
